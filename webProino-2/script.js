@@ -28,13 +28,13 @@ if (typeof firebase !== "undefined") {
         document.getElementById("temp").textContent =
           (typeof temp === "number" ? temp.toFixed(1) : temp) + "°";
 
-      // Tentukan status visual & gauge otomatis berdasarkan kadar CO2 real-time
-      if (co2 <= 600) {
-        updateUIOnly("good", co2);
-      } else if (co2 <= 1000) {
+      // Tentukan status visual & gauge otomatis berdasarkan standar CO2 & CO
+      if (co2 > 2000 || co > 35) {
+        updateUIOnly("bad", co2);
+      } else if (co2 > 1000 || co > 9) {
         updateUIOnly("mid", co2);
       } else {
-        updateUIOnly("bad", co2);
+        updateUIOnly("good", co2);
       }
     }
   });

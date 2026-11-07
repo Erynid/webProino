@@ -33,6 +33,10 @@
           <i data-lucide="activity" style="width: 14px; height: 14px;"></i>
           <span>Monitoring</span>
         </button>
+        <button class="nav-link" onclick="switchTab('standar', event)">
+          <i data-lucide="shield-check" style="width: 14px; height: 14px;"></i>
+          <span>Standar CO₂ &amp; CO</span>
+        </button>
         <button class="nav-link" onclick="switchTab('kenali', event)">
           <i data-lucide="cloud" style="width: 14px; height: 14px;"></i>
           <span>Kenali Asap</span>
@@ -97,8 +101,8 @@
               <circle class="dial-arc" id="dialArc" cx="95" cy="95" r="85"></circle>
             </svg>
             <div class="dial-readout">
-              <span class="readout-label">Kadar CO2</span>
-              <span class="readout-value mono" id="valPM">18</span>
+              <span class="readout-label">Kadar CO₂</span>
+              <span class="readout-value mono" id="valPM">520</span>
               <span class="readout-unit mono">ppm</span>
             </div>
           </div>
@@ -107,29 +111,29 @@
           <div class="status-strip" id="statusStrip">
             <div class="status-dot" id="statusDot"></div>
             <div class="status-text-block">
-              <h3 id="statusTitle">Kualitas Udara Baik</h3>
-              <p id="statusDesc">Konsentrasi gas dalam batas aman untuk seluruh aktivitas belajar mengajar</p>
+              <h3 id="statusTitle">Kualitas Udara Sangat Baik &amp; Segar</h3>
+              <p id="statusDesc">Konsentrasi CO₂ 520 ppm &amp; CO 1.2 ppm dalam rentang aman. Sirkulasi udara berfungsi optimal.</p>
             </div>
           </div>
 
           <!-- 3-Column Telemetry Grid -->
           <div class="telemetry-grid">
-            <div class="telemetry-card">
+            <div class="telemetry-card" onclick="openDetailModal('standar_co2')" style="cursor: pointer;" title="Klik untuk panduan standar CO₂">
               <div class="telemetry-head">
-                <span class="telemetry-name">Sensor Gas (CO2)</span>
-                <span class="telemetry-chip mono" id="chipCO2">Normal</span>
+                <span class="telemetry-name">Kadar CO₂ (Karbon Dioksida)</span>
+                <span class="telemetry-chip mono good" id="chipCO2">Sangat Baik</span>
               </div>
-              <div class="telemetry-val mono" id="valPMTile">18 ppm</div>
-              <div class="telemetry-sub mono">Ambang batas normal: &lt; 600 ppm</div>
+              <div class="telemetry-val mono" id="valPMTile">520 ppm</div>
+              <div class="telemetry-sub mono">Rentang normal: 400 – 1.000 ppm</div>
             </div>
 
-            <div class="telemetry-card">
+            <div class="telemetry-card" onclick="openDetailModal('standar_co')" style="cursor: pointer;" title="Klik untuk panduan standar CO">
               <div class="telemetry-head">
                 <span class="telemetry-name">Karbon Monoksida (CO)</span>
-                <span class="telemetry-chip mono" id="chipCO">Normal</span>
+                <span class="telemetry-chip mono good" id="chipCO">Aman</span>
               </div>
-              <div class="telemetry-val mono" id="valCO">0.4 ppm</div>
-              <div class="telemetry-sub mono">Ambang batas aman: &lt; 9.0 ppm</div>
+              <div class="telemetry-val mono" id="valCO">1.2 ppm</div>
+              <div class="telemetry-sub mono">Ambang batas aman: 0 – 9 ppm</div>
             </div>
 
             <div class="telemetry-card">
@@ -142,22 +146,150 @@
             </div>
           </div>
 
+          <!-- Banner Panduan Baku Mutu -->
+          <div class="standard-banner" onclick="switchTab('standar', event)">
+            <div class="standard-banner-icon">
+              <i data-lucide="book-open" style="width: 15px; height: 15px;"></i>
+            </div>
+            <div class="standard-banner-text">
+              <b>Standar Ruangan Terakreditasi:</b> CO₂ normal berkisar <b>400–1.000 ppm</b> &amp; CO aman <b>0–9 ppm</b>. Periksa tabel lengkap untuk deteksi risiko.
+            </div>
+            <span class="standard-banner-link">
+              <span>Buka Panduan</span>
+              <i data-lucide="arrow-right" style="width: 13px; height: 13px;"></i>
+            </span>
+          </div>
+
           <!-- Simulation Bar -->
           <div class="simulation-bar">
-            <span class="simulation-caption">Simulasi respons indikator antarmuka</span>
+            <span class="simulation-caption">Simulasi respons indikator standar CO₂ &amp; CO</span>
             <div class="simulation-group">
               <button class="simulation-btn active" onclick="setSensorLevel('good', event)">
                 <i data-lucide="check" style="width: 13px; height: 13px;"></i>
-                <span>Normal</span>
+                <span>Normal (400-1000)</span>
               </button>
               <button class="simulation-btn" onclick="setSensorLevel('mid', event)">
                 <i data-lucide="alert-triangle" style="width: 13px; height: 13px;"></i>
-                <span>Sedang</span>
+                <span>Sedang (&gt;1000 / &gt;9)</span>
               </button>
               <button class="simulation-btn" onclick="setSensorLevel('bad', event)">
                 <i data-lucide="alert-octagon" style="width: 13px; height: 13px;"></i>
-                <span>Tinggi</span>
+                <span>Buruk (&gt;2000 / &gt;35)</span>
               </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         STANDAR KUALITAS UDARA RUANGAN (CO₂ & CO) SECTION
+         ========================================================================= -->
+    <section id="standar" class="section-view">
+      <div class="content-card">
+        <div class="card-top">
+          <div class="card-top-info">
+            <h2>🌿 Panduan Standar Kualitas Udara Ruangan (CO₂ &amp; CO)</h2>
+            <p>Baku mutu konsentrasi gas Karbon Dioksida dan Karbon Monoksida untuk ruang kelas dan ruang kerja sehat</p>
+          </div>
+        </div>
+
+        <div class="standard-grid">
+          <!-- 1. Karbon Dioksida (CO₂) -->
+          <div class="standard-card">
+            <div class="standard-header">
+              <div class="standard-header-icon co2">
+                <span>🍃</span>
+              </div>
+              <div class="standard-header-info">
+                <h3>1. Karbon Dioksida (CO₂)</h3>
+                <p>Parameter sirkulasi udara dan pertukaran oksigen dalam ruangan</p>
+              </div>
+            </div>
+
+            <div class="standard-callout">
+              Kadar karbon dioksida (CO₂) dalam ruangan yang normal umumnya berkisar antara <b>400 hingga 1.000 ppm</b> (parts per million).
+            </div>
+
+            <div class="standard-tiers">
+              <div class="standard-tier-row">
+                <span class="standard-range">400 – 800 ppm</span>
+                <span class="standard-tag good">Sangat Baik</span>
+                <span class="standard-desc">Kualitas udara sangat baik dan segar (ventilasi/sirkulasi udara berfungsi optimal).</span>
+              </div>
+
+              <div class="standard-tier-row">
+                <span class="standard-range">801 – 1.000 ppm</span>
+                <span class="standard-tag good">Batas Normal</span>
+                <span class="standard-desc">Batas normal, mulai ada penumpukan CO₂ ringan dari aktivitas atau napas penghuni.</span>
+              </div>
+
+              <div class="standard-tier-row">
+                <span class="standard-range">1.001 – 2.000 ppm</span>
+                <span class="standard-tag mid">Mulai Buruk</span>
+                <span class="standard-desc">Kualitas udara mulai buruk, dapat menyebabkan rasa kantuk, kurang fokus, dan konsentrasi menurun.</span>
+              </div>
+
+              <div class="standard-tier-row">
+                <span class="standard-range">2.001 – 5.000 ppm</span>
+                <span class="standard-tag bad">Kualitas Buruk</span>
+                <span class="standard-desc">Kualitas udara buruk, berpotensi memicu sakit kepala, pusing, dan gejala Sick Building Syndrome.</span>
+              </div>
+
+              <div class="standard-tier-row">
+                <span class="standard-range">Di atas 5.000 ppm</span>
+                <span class="standard-tag danger">Kondisi Berbahaya</span>
+                <span class="standard-desc">Kondisi berbahaya, memerlukan tindakan ventilasi atau pengosongan ruangan segera.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Karbon Monoksida (CO) -->
+          <div class="standard-card">
+            <div class="standard-header">
+              <div class="standard-header-icon co">
+                <span>⚠️</span>
+              </div>
+              <div class="standard-header-info">
+                <h3>2. Karbon Monoksida (CO)</h3>
+                <p>Gas beracun tanpa bau akibat pembakaran tak sempurna dan asap kendaraan</p>
+              </div>
+            </div>
+
+            <div class="standard-callout">
+              Kadar karbon monoksida (CO) di dalam ruangan yang aman dan normal berkisar antara <b>0 hingga 9 ppm</b>.
+            </div>
+
+            <div class="standard-tiers">
+              <div class="standard-tier-row">
+                <span class="standard-range">0 – 9 ppm</span>
+                <span class="standard-tag good">Sangat Baik &amp; Aman</span>
+                <span class="standard-desc">Kualitas udara sangat baik dan aman (kadar CO normal lingkungan).</span>
+              </div>
+
+              <div class="standard-tier-row">
+                <span class="standard-range">10 – 35 ppm</span>
+                <span class="standard-tag mid">Batas Sedang</span>
+                <span class="standard-desc">Batas paparan sedang, berisiko bagi individu sensitif (anak-anak, lansia, penderita asma) jika terpapar lama.</span>
+              </div>
+
+              <div class="standard-tier-row">
+                <span class="standard-range">36 – 100 ppm</span>
+                <span class="standard-tag bad">Kualitas Buruk</span>
+                <span class="standard-desc">Kualitas udara buruk, dapat memicu sakit kepala ringan, pusing, mual, dan lelah (setelah paparan 1–2 jam).</span>
+              </div>
+
+              <div class="standard-tier-row">
+                <span class="standard-range">101 – 400 ppm</span>
+                <span class="standard-tag danger">Sangat Berbahaya</span>
+                <span class="standard-desc">Kualitas udara sangat berbahaya, memicu sakit kepala berat, pusing parah, dan bingung (paparan &gt;30 menit).</span>
+              </div>
+
+              <div class="standard-tier-row">
+                <span class="standard-range">Di atas 400 ppm</span>
+                <span class="standard-tag danger" style="background-color: #991b1b;">Darurat &amp; Fatal</span>
+                <span class="standard-desc">Kondisi darurat dan fatal, berisiko tinggi menyebabkan kehilangan kesadaran hingga ancaman jiwa.</span>
+              </div>
             </div>
           </div>
         </div>
@@ -654,7 +786,10 @@
       document.querySelectorAll(".nav-link").forEach((n) => n.classList.remove("active"));
 
       const target = document.getElementById(tabId);
-      if (target) target.classList.add("active");
+      if (target) {
+        target.classList.add("active");
+        if (typeof lucide !== "undefined") lucide.createIcons();
+      }
 
       if (event && event.currentTarget) {
         event.currentTarget.classList.add("active");
@@ -675,7 +810,7 @@
         // Jika kembali ke tab game dan sebelumnya di layar gameplay
         const gameplayScreen = document.getElementById("screen-gameplay");
         if (gameplayScreen && gameplayScreen.style.display === "flex") {
-          if (!simActive && simLives > 0 && simScore < 100 && simTimeLeft > 0) {
+          if (!simActive && simLives > 0 && simTimeLeft > 0) {
             resumeSimulation();
           }
         }
@@ -688,6 +823,26 @@
 
     // 3. Educational Modal Data & Handler
     const modalData = {
+      standar_co2: {
+        icon: "shield-check",
+        title: "Standar Karbon Dioksida (CO₂)",
+        desc: "Kadar karbon dioksida (CO₂) dalam ruangan yang normal umumnya berkisar antara <strong>400 hingga 1.000 ppm</strong> (parts per million).<br><br>" +
+          "• <strong>400 – 800 ppm:</strong> Kualitas udara sangat baik dan segar (ventilasi/sirkulasi udara berfungsi optimal).<br>" +
+          "• <strong>801 – 1.000 ppm:</strong> Batas normal, mulai ada penumpukan CO₂ ringan dari napas penghuni.<br>" +
+          "• <strong>1.001 – 2.000 ppm:</strong> Kualitas udara mulai buruk, dapat menyebabkan rasa kantuk, kurang fokus, dan konsentrasi menurun.<br>" +
+          "• <strong>2.001 – 5.000 ppm:</strong> Kualitas udara buruk, berpotensi memicu sakit kepala, pusing, dan gejala Sick Building Syndrome.<br>" +
+          "• <strong>Di atas 5.000 ppm:</strong> Kondisi berbahaya, memerlukan tindakan ventilasi atau pengosongan ruangan segera."
+      },
+      standar_co: {
+        icon: "alert-triangle",
+        title: "Standar Karbon Monoksida (CO)",
+        desc: "Kadar karbon monoksida (CO) di dalam ruangan yang aman dan normal berkisar antara <strong>0 hingga 9 ppm</strong>.<br><br>" +
+          "• <strong>0 – 9 ppm:</strong> Kualitas udara sangat baik dan aman (kadar CO normal lingkungan).<br>" +
+          "• <strong>10 – 35 ppm:</strong> Batas paparan sedang, berisiko bagi individu sensitif (anak-anak, lansia, penderita asma) jika terpapar lama.<br>" +
+          "• <strong>36 – 100 ppm:</strong> Kualitas udara buruk, dapat memicu sakit kepala ringan, pusing, mual, dan lelah (setelah paparan 1–2 jam).<br>" +
+          "• <strong>101 – 400 ppm:</strong> Kualitas udara sangat berbahaya, memicu sakit kepala berat, pusing parah, dan bingung (paparan &gt;30 menit).<br>" +
+          "• <strong>Di atas 400 ppm:</strong> Kondisi darurat dan fatal, berisiko tinggi menyebabkan kehilangan kesadaran hingga ancaman jiwa."
+      },
       putih: {
         icon: "cloud",
         title: "Asap Putih Tipis",
@@ -754,7 +909,7 @@
       document.getElementById("modalBackdrop").classList.remove("active");
     }
 
-    // 4. Status Level & Simulation Controller
+    // 4. Status Level & Simulation Controller (Sesuai Standar CO2 & CO)
     function setSensorLevel(level, event) {
       currentSensorLevel = level;
       const strip = document.getElementById("statusStrip");
@@ -762,8 +917,12 @@
       const title = document.getElementById("statusTitle");
       const desc = document.getElementById("statusDesc");
       const arc = document.getElementById("dialArc");
-      const chip = document.getElementById("chipCO2");
+      const chipCO2 = document.getElementById("chipCO2");
+      const chipCO = document.getElementById("chipCO");
       const stationDot = document.getElementById("stationDot");
+      const valPM = document.getElementById("valPM");
+      const valPMTile = document.getElementById("valPMTile");
+      const valCO = document.getElementById("valCO");
 
       document.querySelectorAll(".simulation-btn").forEach((b) => b.classList.remove("active"));
       if (event && event.currentTarget) {
@@ -771,35 +930,177 @@
       }
 
       if (level === "good") {
+        if (valPM) valPM.textContent = "520";
+        if (valPMTile) valPMTile.textContent = "520 ppm";
+        if (valCO) valCO.textContent = "1.2 ppm";
+
         strip.style.backgroundColor = "var(--status-good-bg)";
         strip.style.borderColor = "var(--status-good-border)";
         dot.style.backgroundColor = "var(--status-good)";
-        stationDot.style.backgroundColor = "var(--status-good)";
-        arc.style.stroke = "var(--status-good)";
-        arc.style.strokeDashoffset = "240";
-        title.textContent = "Kualitas Udara Baik";
-        desc.textContent = "Konsentrasi gas dalam batas aman untuk seluruh aktivitas belajar mengajar";
-        if (chip) chip.textContent = "Normal";
+        if (stationDot) stationDot.style.backgroundColor = "var(--status-good)";
+        if (arc) {
+          arc.style.stroke = "var(--status-good)";
+          arc.style.strokeDashoffset = "240";
+        }
+        title.textContent = "Kualitas Udara Sangat Baik & Segar";
+        desc.textContent = "CO₂ 520 ppm (rentang normal 400–1.000 ppm) & CO 1.2 ppm (aman 0–9 ppm). Sirkulasi udara berfungsi optimal.";
+        if (chipCO2) {
+          chipCO2.textContent = "Sangat Baik";
+          chipCO2.className = "telemetry-chip mono good";
+        }
+        if (chipCO) {
+          chipCO.textContent = "Aman";
+          chipCO.className = "telemetry-chip mono good";
+        }
       } else if (level === "mid") {
+        if (valPM) valPM.textContent = "1420";
+        if (valPMTile) valPMTile.textContent = "1420 ppm";
+        if (valCO) valCO.textContent = "16.0 ppm";
+
         strip.style.backgroundColor = "var(--status-mid-bg)";
         strip.style.borderColor = "var(--status-mid-border)";
         dot.style.backgroundColor = "var(--status-mid)";
-        stationDot.style.backgroundColor = "var(--status-mid)";
-        arc.style.stroke = "var(--status-mid)";
-        arc.style.strokeDashoffset = "130";
-        title.textContent = "Kualitas Udara Sedang";
-        desc.textContent = "Kadar polutan meningkat, siswa dengan riwayat sensitif dianjurkan memakai masker";
-        if (chip) chip.textContent = "Waspada";
+        if (stationDot) stationDot.style.backgroundColor = "var(--status-mid)";
+        if (arc) {
+          arc.style.stroke = "var(--status-mid)";
+          arc.style.strokeDashoffset = "130";
+        }
+        title.textContent = "Kualitas Udara Mulai Menurun (Perhatian)";
+        desc.textContent = "CO₂ 1.420 ppm (1.001–2.000 ppm, memicu rasa kantuk & kurang fokus) atau CO 16.0 ppm (berisiko bagi anak & penderita asma).";
+        if (chipCO2) {
+          chipCO2.textContent = "Mulai Buruk";
+          chipCO2.className = "telemetry-chip mono mid";
+        }
+        if (chipCO) {
+          chipCO.textContent = "Batas Sedang";
+          chipCO.className = "telemetry-chip mono mid";
+        }
+      } else {
+        if (valPM) valPM.textContent = "2850";
+        if (valPMTile) valPMTile.textContent = "2850 ppm";
+        if (valCO) valCO.textContent = "48.0 ppm";
+
+        strip.style.backgroundColor = "var(--status-bad-bg)";
+        strip.style.borderColor = "var(--status-bad-border)";
+        dot.style.backgroundColor = "var(--status-bad)";
+        if (stationDot) stationDot.style.backgroundColor = "var(--status-bad)";
+        if (arc) {
+          arc.style.stroke = "var(--status-bad)";
+          arc.style.strokeDashoffset = "25";
+        }
+        title.textContent = "Kualitas Udara Buruk / Berbahaya";
+        desc.textContent = "CO₂ 2.850 ppm (2.001–5.000 ppm, pusing & Sick Building Syndrome) dan CO 48.0 ppm (mual & lelah). Segera buka ventilasi!";
+        if (chipCO2) {
+          chipCO2.textContent = "Buruk";
+          chipCO2.className = "telemetry-chip mono bad";
+        }
+        if (chipCO) {
+          chipCO.textContent = "Buruk";
+          chipCO.className = "telemetry-chip mono bad";
+        }
+      }
+    }
+
+    // Evaluator realtime telemetri sensor ESP32
+    function updateLiveSensorEvaluation(co2, co) {
+      const chipCO2 = document.getElementById("chipCO2");
+      const chipCO = document.getElementById("chipCO");
+      const strip = document.getElementById("statusStrip");
+      const dot = document.getElementById("statusDot");
+      const title = document.getElementById("statusTitle");
+      const desc = document.getElementById("statusDesc");
+      const arc = document.getElementById("dialArc");
+      const stationDot = document.getElementById("stationDot");
+
+      // 1. Evaluasi CO2 (Baku Mutu Ruangan)
+      let co2Status = "good";
+      let co2Text = "Normal";
+      if (co2 > 5000) {
+        co2Status = "bad"; co2Text = "Kondisi Berbahaya";
+      } else if (co2 > 2000) {
+        co2Status = "bad"; co2Text = "Kualitas Buruk";
+      } else if (co2 > 1000) {
+        co2Status = "mid"; co2Text = "Mulai Buruk";
+      } else if (co2 >= 801) {
+        co2Status = "good"; co2Text = "Batas Normal";
+      } else {
+        co2Status = "good"; co2Text = "Sangat Baik";
+      }
+
+      if (chipCO2) {
+        chipCO2.textContent = co2Text;
+        chipCO2.className = `telemetry-chip mono ${co2Status}`;
+      }
+
+      // 2. Evaluasi CO (Baku Mutu Ruangan)
+      let coStatus = "good";
+      let coText = "Aman";
+      if (co > 400) {
+        coStatus = "bad"; coText = "Darurat Fatal";
+      } else if (co > 100) {
+        coStatus = "bad"; coText = "Sangat Bahaya";
+      } else if (co > 35) {
+        coStatus = "bad"; coText = "Kualitas Buruk";
+      } else if (co > 9) {
+        coStatus = "mid"; coText = "Batas Sedang";
+      } else {
+        coStatus = "good"; coText = "Sangat Baik";
+      }
+
+      if (chipCO) {
+        chipCO.textContent = coText;
+        chipCO.className = `telemetry-chip mono ${coStatus}`;
+      }
+
+      // 3. Status Keseluruhan
+      let overall = "good";
+      if (co2Status === "bad" || coStatus === "bad") {
+        overall = "bad";
+      } else if (co2Status === "mid" || coStatus === "mid") {
+        overall = "mid";
+      }
+
+      if (overall === "good") {
+        strip.style.backgroundColor = "var(--status-good-bg)";
+        strip.style.borderColor = "var(--status-good-border)";
+        dot.style.backgroundColor = "var(--status-good)";
+        if (stationDot) stationDot.style.backgroundColor = "var(--status-good)";
+        if (arc) {
+          arc.style.stroke = "var(--status-good)";
+          arc.style.strokeDashoffset = "240";
+        }
+        if (title) title.textContent = "Kualitas Udara Sangat Baik & Segar";
+        if (desc) desc.textContent = `CO₂ ${co2} ppm & CO ${typeof co === 'number' ? co.toFixed(1) : co} ppm dalam batas aman. Sirkulasi udara berfungsi optimal.`;
+      } else if (overall === "mid") {
+        strip.style.backgroundColor = "var(--status-mid-bg)";
+        strip.style.borderColor = "var(--status-mid-border)";
+        dot.style.backgroundColor = "var(--status-mid)";
+        if (stationDot) stationDot.style.backgroundColor = "var(--status-mid)";
+        if (arc) {
+          arc.style.stroke = "var(--status-mid)";
+          arc.style.strokeDashoffset = "130";
+        }
+        if (title) title.textContent = "Kualitas Udara Mulai Menurun (Perhatian)";
+        if (desc) {
+          if (co2 > 1000) {
+            desc.textContent = `CO₂ ${co2} ppm (1.001–2.000 ppm): dapat menyebabkan kantuk & konsentrasi menurun. Dianjurkan membuka ventilasi.`;
+          } else {
+            desc.textContent = `CO ${typeof co === 'number' ? co.toFixed(1) : co} ppm (10–35 ppm): berisiko bagi anak-anak, lansia, atau penderita asma jika terpapar lama.`;
+          }
+        }
       } else {
         strip.style.backgroundColor = "var(--status-bad-bg)";
         strip.style.borderColor = "var(--status-bad-border)";
         dot.style.backgroundColor = "var(--status-bad)";
-        stationDot.style.backgroundColor = "var(--status-bad)";
-        arc.style.stroke = "var(--status-bad)";
-        arc.style.strokeDashoffset = "25";
-        title.textContent = "Kadar Polutan Tinggi";
-        desc.textContent = "Kondisi tidak disarankan untuk aktivitas luar ruangan, tutup ventilasi ruang";
-        if (chip) chip.textContent = "Bahaya";
+        if (stationDot) stationDot.style.backgroundColor = "var(--status-bad)";
+        if (arc) {
+          arc.style.stroke = "var(--status-bad)";
+          arc.style.strokeDashoffset = "25";
+        }
+        if (title) title.textContent = (co > 100 || co2 > 5000) ? "Kondisi Bahaya / Kritis!" : "Kualitas Udara Buruk";
+        if (desc) {
+          desc.textContent = `Konsentrasi gas melebihi ambang batas sehat (CO₂ ${co2} ppm / CO ${typeof co === 'number' ? co.toFixed(1) : co} ppm). Berpotensi memicu pusing/mual. Segera lakukan ventilasi atau evakuasi!`;
+        }
       }
     }
 
@@ -1511,12 +1812,16 @@
           if (coEl) coEl.textContent = typeof co === "number" ? co.toFixed(1) + " ppm" : co;
           if (tempEl) tempEl.textContent = (typeof temp === "number" ? temp.toFixed(1) : temp) + "°C";
 
-          if (co2 > 1000 || co > 9.0) {
-            setSensorLevel("bad");
-          } else if (co2 > 600 || co > 4.4) {
-            setSensorLevel("mid");
+          if (typeof updateLiveSensorEvaluation === "function") {
+            updateLiveSensorEvaluation(co2, co);
           } else {
-            setSensorLevel("good");
+            if (co2 > 2000 || co > 35) {
+              setSensorLevel("bad");
+            } else if (co2 > 1000 || co > 9) {
+              setSensorLevel("mid");
+            } else {
+              setSensorLevel("good");
+            }
           }
         },
         (err) => console.warn("Firebase listener note:", err.message)
