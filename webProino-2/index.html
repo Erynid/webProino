@@ -1,0 +1,1530 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Sahabat Udara Bersih — Telemetri Kualitas Udara Sekolah</title>
+  
+  <!-- Unslopped Clean Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+  
+  <!-- Lucide Line Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+  <!-- Header Navigasi -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-section">
+        <div class="brand-mark">
+          <i data-lucide="gauge" style="width: 16px; height: 16px;"></i>
+        </div>
+        <div class="brand-titles">
+          <span class="brand-title">Sahabat Udara Bersih</span>
+          <span class="brand-meta mono">Stasiun Sensor ESP32</span>
+        </div>
+      </div>
+
+      <!-- Navigasi Menu Tab -->
+      <nav class="app-nav" id="appNav">
+        <button class="nav-link active" onclick="switchTab('monitoring', event)">
+          <i data-lucide="activity" style="width: 14px; height: 14px;"></i>
+          <span>Monitoring</span>
+        </button>
+        <button class="nav-link" onclick="switchTab('kenali', event)">
+          <i data-lucide="cloud" style="width: 14px; height: 14px;"></i>
+          <span>Kenali Asap</span>
+        </button>
+        <button class="nav-link" onclick="switchTab('asal', event)">
+          <i data-lucide="factory" style="width: 14px; height: 14px;"></i>
+          <span>Asal Asap</span>
+        </button>
+        <button class="nav-link" onclick="switchTab('dampak', event)">
+          <i data-lucide="heart-pulse" style="width: 14px; height: 14px;"></i>
+          <span>Efek Tubuh</span>
+        </button>
+        <button class="nav-link" onclick="switchTab('game', event)">
+          <i data-lucide="gamepad-2" style="width: 14px; height: 14px;"></i>
+          <span>Simulasi Interaktif</span>
+        </button>
+      </nav>
+
+      <!-- Pilihan Tema & Menu Mobile -->
+      <div class="header-actions">
+        <div class="theme-switch" role="radiogroup" aria-label="Pilihan Tema Tampilan">
+          <button class="theme-btn active" id="btnThemeLight" onclick="setAppTheme('light')" aria-label="Tema Terang">
+            <i data-lucide="sun" style="width: 13px; height: 13px;"></i>
+            <span>Terang</span>
+          </button>
+          <button class="theme-btn" id="btnThemeDark" onclick="setAppTheme('dark')" aria-label="Tema Gelap">
+            <i data-lucide="moon" style="width: 13px; height: 13px;"></i>
+            <span>Gelap</span>
+          </button>
+        </div>
+
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Buka Menu">
+          <i data-lucide="menu" style="width: 16px; height: 16px;"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <!-- =========================================================================
+         1. MONITORING SECTION (Primary Instrument Moment)
+         ========================================================================= -->
+    <section id="monitoring" class="section-view active">
+      <div class="content-card">
+        <div class="card-top">
+          <div class="card-top-info">
+            <h2>Pemantauan Udara Lingkungan</h2>
+            <p>Data telemetri langsung dari sensor perangkat keras stasiun sekolah</p>
+          </div>
+          <!-- Signature Detail: Calibration Tag -->
+          <div class="station-stamp mono">
+            <span class="station-pulse-dot" id="stationDot"></span>
+            <span>ESP32 · STN-01 · LIVE</span>
+          </div>
+        </div>
+
+        <div class="instrument-stage">
+          <!-- Primary Telemetry Dial -->
+          <div class="dial-container">
+            <svg class="dial-svg" viewBox="0 0 190 190">
+              <circle class="dial-track" cx="95" cy="95" r="85"></circle>
+              <circle class="dial-arc" id="dialArc" cx="95" cy="95" r="85"></circle>
+            </svg>
+            <div class="dial-readout">
+              <span class="readout-label">Kadar CO2</span>
+              <span class="readout-value mono" id="valPM">18</span>
+              <span class="readout-unit mono">ppm</span>
+            </div>
+          </div>
+
+          <!-- Status Strip -->
+          <div class="status-strip" id="statusStrip">
+            <div class="status-dot" id="statusDot"></div>
+            <div class="status-text-block">
+              <h3 id="statusTitle">Kualitas Udara Baik</h3>
+              <p id="statusDesc">Konsentrasi gas dalam batas aman untuk seluruh aktivitas belajar mengajar</p>
+            </div>
+          </div>
+
+          <!-- 3-Column Telemetry Grid -->
+          <div class="telemetry-grid">
+            <div class="telemetry-card">
+              <div class="telemetry-head">
+                <span class="telemetry-name">Sensor Gas (CO2)</span>
+                <span class="telemetry-chip mono" id="chipCO2">Normal</span>
+              </div>
+              <div class="telemetry-val mono" id="valPMTile">18 ppm</div>
+              <div class="telemetry-sub mono">Ambang batas normal: &lt; 600 ppm</div>
+            </div>
+
+            <div class="telemetry-card">
+              <div class="telemetry-head">
+                <span class="telemetry-name">Karbon Monoksida (CO)</span>
+                <span class="telemetry-chip mono" id="chipCO">Normal</span>
+              </div>
+              <div class="telemetry-val mono" id="valCO">0.4 ppm</div>
+              <div class="telemetry-sub mono">Ambang batas aman: &lt; 9.0 ppm</div>
+            </div>
+
+            <div class="telemetry-card">
+              <div class="telemetry-head">
+                <span class="telemetry-name">Suhu Ruangan</span>
+                <span class="telemetry-chip mono">DHT11</span>
+              </div>
+              <div class="telemetry-val mono" id="valTemp">29.0°C</div>
+              <div class="telemetry-sub mono">Suhu operasional kelas wajar</div>
+            </div>
+          </div>
+
+          <!-- Simulation Bar -->
+          <div class="simulation-bar">
+            <span class="simulation-caption">Simulasi respons indikator antarmuka</span>
+            <div class="simulation-group">
+              <button class="simulation-btn active" onclick="setSensorLevel('good', event)">
+                <i data-lucide="check" style="width: 13px; height: 13px;"></i>
+                <span>Normal</span>
+              </button>
+              <button class="simulation-btn" onclick="setSensorLevel('mid', event)">
+                <i data-lucide="alert-triangle" style="width: 13px; height: 13px;"></i>
+                <span>Sedang</span>
+              </button>
+              <button class="simulation-btn" onclick="setSensorLevel('bad', event)">
+                <i data-lucide="alert-octagon" style="width: 13px; height: 13px;"></i>
+                <span>Tinggi</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         2. KENALI ASAP SECTION
+         ========================================================================= -->
+    <section id="kenali" class="section-view">
+      <div class="content-card">
+        <div class="card-top">
+          <div class="card-top-info">
+            <h2>Karakteristik & Jenis Polutan</h2>
+            <p>Identifikasi visual jenis asap dan tingkat risiko kesehatan pernapasan</p>
+          </div>
+        </div>
+
+        <div class="cards-grid">
+          <div class="card-item" onclick="openDetailModal('putih')">
+            <div class="card-item-header">
+              <div class="item-icon">
+                <i data-lucide="cloud" style="width: 16px; height: 16px;"></i>
+              </div>
+              <span class="level-tag good">Risiko Rendah</span>
+            </div>
+            <h3>Asap Putih Tipis</h3>
+            <p>Didominasi uap air atau pembakaran dedaunan kering dalam skala kecil. Cepat terurai oleh aliran udara.</p>
+            <div class="card-item-cue">
+              <span>Detail panduan</span>
+              <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+            </div>
+          </div>
+
+          <div class="card-item" onclick="openDetailModal('abu')">
+            <div class="card-item-header">
+              <div class="item-icon">
+                <i data-lucide="wind" style="width: 16px; height: 16px;"></i>
+              </div>
+              <span class="level-tag mid">Risiko Sedang</span>
+            </div>
+            <h3>Asap Abu-abu Kabut</h3>
+            <p>Mengindikasikan pembakaran yang kurang sempurna dengan pelepasan jelaga debu dan senyawa hidrokarbon.</p>
+            <div class="card-item-cue">
+              <span>Detail panduan</span>
+              <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+            </div>
+          </div>
+
+          <div class="card-item" onclick="openDetailModal('hitam')">
+            <div class="card-item-header">
+              <div class="item-icon">
+                <i data-lucide="flame" style="width: 16px; height: 16px;"></i>
+              </div>
+              <span class="level-tag bad">Risiko Tinggi</span>
+            </div>
+            <h3>Asap Hitam Pekat</h3>
+            <p>Mengandung gas beracun, jelaga pekat, dan senyawa dioksin dari pembakaran bahan kimia sintetis atau sampah plastik.</p>
+            <div class="card-item-cue">
+              <span>Detail panduan</span>
+              <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         3. ASAL ASAP SECTION
+         ========================================================================= -->
+    <section id="asal" class="section-view">
+      <div class="content-card">
+        <div class="card-top">
+          <div class="card-top-info">
+            <h2>Sumber Polusi Lingkungan</h2>
+            <p>Asal emisi udara kotor di sekitar kawasan permukiman dan sekolah</p>
+          </div>
+        </div>
+
+        <div class="cards-grid">
+          <div class="card-item" onclick="openDetailModal('sampah')">
+            <div class="card-item-header">
+              <div class="item-icon">
+                <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+              </div>
+              <span class="level-tag mid">Kawasan Warga</span>
+            </div>
+            <h3>Pembakaran Sampah Terbuka</h3>
+            <p>Membakar sampah plastik melepaskan zat dioksin yang dapat terhirup dan tersimpan dalam jaringan paru-paru.</p>
+            <div class="card-item-cue">
+              <span>Rekomendasi tindakan</span>
+              <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+            </div>
+          </div>
+
+          <div class="card-item" onclick="openDetailModal('kendaraan')">
+            <div class="card-item-header">
+              <div class="item-icon">
+                <i data-lucide="car" style="width: 16px; height: 16px;"></i>
+              </div>
+              <span class="level-tag good">Jalur Lalu Lintas</span>
+            </div>
+            <h3>Emisi Gas Kendaraan</h3>
+            <p>Gas buang mesin motor dan mobil menyumbang peningkatan konsentrasi gas karbon monoksida di sekitar gerbang sekolah.</p>
+            <div class="card-item-cue">
+              <span>Rekomendasi tindakan</span>
+              <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+            </div>
+          </div>
+
+          <div class="card-item" onclick="openDetailModal('lahan')">
+            <div class="card-item-header">
+              <div class="item-icon">
+                <i data-lucide="trees" style="width: 16px; height: 16px;"></i>
+              </div>
+              <span class="level-tag bad">Lahan Terbuka</span>
+            </div>
+            <h3>Kebakaran Lahan dan Hutan</h3>
+            <p>Menghasilkan kabut aerosol partikulat luas yang dapat menurunkan jarak pandang dan ketersediaan udara bersih.</p>
+            <div class="card-item-cue">
+              <span>Rekomendasi tindakan</span>
+              <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         4. EFEK TUBUH SECTION
+         ========================================================================= -->
+    <section id="dampak" class="section-view">
+      <div class="content-card">
+        <div class="card-top">
+          <div class="card-top-info">
+            <h2>Dampak Terhadap Kesehatan</h2>
+            <p>Respons fisiologis tubuh terhadap paparan partikel polusi dan tindakan pertolongan pertama</p>
+          </div>
+        </div>
+
+        <div class="cards-grid">
+          <div class="card-item" onclick="openDetailModal('tenggorokan')">
+            <div class="card-item-header">
+              <div class="item-icon">
+                <i data-lucide="activity" style="width: 16px; height: 16px;"></i>
+              </div>
+              <span class="level-tag mid">Saluran Atas</span>
+            </div>
+            <h3>Iritasi Tenggorokan</h3>
+            <p>Tenggorokan kering dan batuk refleks akibat partikel debu halus menempel pada lapisan lendir saluran napas.</p>
+            <div class="card-item-cue">
+              <span>Langkah penanganan</span>
+              <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+            </div>
+          </div>
+
+          <div class="card-item" onclick="openDetailModal('paruparu')">
+            <div class="card-item-header">
+              <div class="item-icon">
+                <i data-lucide="heart-pulse" style="width: 16px; height: 16px;"></i>
+              </div>
+              <span class="level-tag bad">Saluran Paru</span>
+            </div>
+            <h3>Sesak Napas</h3>
+            <p>Penurunan pasokan oksigen bersih dan gas CO yang mengikat hemoglobin menyebabkan rasa berat pada rongga dada.</p>
+            <div class="card-item-cue">
+              <span>Langkah penanganan</span>
+              <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+            </div>
+          </div>
+
+          <div class="card-item" onclick="openDetailModal('mata')">
+            <div class="card-item-header">
+              <div class="item-icon">
+                <i data-lucide="eye" style="width: 16px; height: 16px;"></i>
+              </div>
+              <span class="level-tag good">Penglihatan</span>
+            </div>
+            <h3>Iritasi Mata</h3>
+            <p>Zat asam pada kabut asap mengiritasi lapisan air mata sehingga menyebabkan mata merah dan berair.</p>
+            <div class="card-item-cue">
+              <span>Langkah penanganan</span>
+              <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         5. GAME ARCADE SECTION (Clean Interactive Simulation)
+         ========================================================================= -->
+    <section id="game" class="section-view">
+      <div class="content-card">
+        <div class="card-top">
+          <div class="card-top-info">
+            <h2>Simulasi Interaktif</h2>
+            <p>Edukasi penangkapan partikel udara bersih dan pencegahan polutan</p>
+          </div>
+          <button class="hud-btn" onclick="exitGameToMonitoring()" style="height: 28px; padding: 0 10px;">
+            <i data-lucide="arrow-left" style="width: 13px; height: 13px;"></i>
+            <span>Monitoring</span>
+          </button>
+        </div>
+
+        <!-- Arcade Menu Screen -->
+        <div id="screen-menu" class="arcade-panel">
+          <div class="arcade-icon">
+            <i data-lucide="compass" style="width: 24px; height: 24px;"></i>
+          </div>
+          <h2>Misi Udara Bersih</h2>
+          <p class="arcade-desc">
+            Kumpulkan skor setinggi-tingginya dalam 45 detik! Jaga combo streak, manfaatkan filter kilat, dan hindari partikel polutan berbahaya.
+          </p>
+
+          <div class="highscore-pill">
+            <span>🏆</span>
+            <span>Skor Tertinggi:</span>
+            <b class="mono" id="menuHighScore">0 Poin</b>
+          </div>
+
+          <div class="arcade-instructions">
+            <div class="instruction-block">
+              <div class="instruction-emojis">
+                <span>🌳</span><span>😷</span><span>☁️</span><span>🍃</span><span>💧</span>
+              </div>
+              <h4>Partikel Sehat (+Poin)</h4>
+              <p>
+                Tangkap berturut-turut untuk <b>Combo Multiplier (x2, x3, x4)</b>. Jika terlewat jatuh ke bawah: <b>-3 poin</b> & combo reset.
+              </p>
+            </div>
+
+            <div class="instruction-block">
+              <div class="instruction-emojis">
+                <span>🏭</span><span>🚗</span><span>🗑️</span><span>💨</span><span>☣️</span>
+              </div>
+              <h4>Polutan & Bahaya (-❤️)</h4>
+              <p>
+                Hindari asap industri dan emisi (-1❤️). Waspadai limbah toksik berbahaya ☣️ (-2❤️)!
+              </p>
+            </div>
+
+            <div class="instruction-block">
+              <div class="instruction-emojis">
+                <span>🛡️</span><span>⚡</span>
+              </div>
+              <h4>Power-Up Khusus</h4>
+              <p>
+                🛡️ <b>Perisai:</b> Menahan 1 serangan polutan.<br>
+                ⚡ <b>Filter Kilat:</b> Membersihkan semua polutan di layar (+15 poin)!
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap;">
+            <button class="primary-btn" onclick="startSimulation()">
+              <i data-lucide="play" style="width: 15px; height: 15px;"></i>
+              <span>Mulai Misi (45 Detik)</span>
+            </button>
+            <button class="primary-btn" style="background-color: var(--surface-raised); color: var(--text-secondary); border: 1px solid var(--border-hairline);" onclick="exitGameToMonitoring()">
+              <i data-lucide="arrow-left" style="width: 14px; height: 14px;"></i>
+              <span>Kembali ke Monitoring</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Arcade Playfield Screen -->
+        <div id="screen-gameplay" style="display: none; flex-direction: column; align-items: center;">
+          <div class="arcade-hud">
+            <!-- HUD Row 1: Primary Metrics & Control -->
+            <div class="hud-row">
+              <div class="hud-stat-group">
+                <div class="hud-pill" title="Sisa Batas Kesempatan">
+                  <span>❤️</span>
+                  <span id="lives-display">❤️❤️❤️</span>
+                </div>
+                <div class="hud-pill" title="Skor Saat Ini">
+                  <span>Skor:</span>
+                  <b class="mono" id="score-display">0</b>
+                </div>
+                <div class="hud-pill timer-pill" id="timerPill" title="Sisa Waktu">
+                  <span>⏱️</span>
+                  <span id="time-display">00:45</span>
+                </div>
+                <div class="hud-pill" title="Skor Tertinggi">
+                  <span>🏆</span>
+                  <span class="mono" id="hudHighScore" style="font-weight: 600;">0</span>
+                </div>
+              </div>
+
+              <div class="hud-actions">
+                <button class="hud-btn" onclick="togglePauseSimulation()" id="pauseBtn" title="Jeda atau Lanjutkan">
+                  <span id="pauseBtnText">⏸️ Jeda</span>
+                </button>
+                <button class="hud-btn" onclick="startSimulation()" title="Ulangi dari Awal">
+                  <i data-lucide="rotate-ccw" style="width: 12px; height: 12px;"></i>
+                  <span>Ulang</span>
+                </button>
+                <button class="hud-btn" onclick="exitGameToMonitoring()" title="Keluar ke Monitoring">
+                  <i data-lucide="log-out" style="width: 12px; height: 12px;"></i>
+                  <span>Keluar</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- HUD Row 2: Dynamic Wave Level & Modifiers -->
+            <div class="hud-row" style="padding-top: 4px; border-top: 1px solid var(--border-hairline);">
+              <div class="hud-stat-group">
+                <span class="level-badge" id="levelDisplay">LEVEL 1: UDARA PAGI</span>
+                <span class="combo-pill" id="comboBadge">COMBO x2 🔥</span>
+                <span class="shield-pill" id="shieldBadge">🛡️ SHIELD AKTIF</span>
+              </div>
+              <div style="font-size: 11px; color: var(--text-muted);">
+                Streak: <b id="streakDisplay" class="mono" style="color: var(--text-primary);">0</b>
+              </div>
+            </div>
+          </div>
+
+          <div id="arcade-board" class="arcade-canvas">
+            <!-- Overlay Jeda / Pause -->
+            <div class="pause-overlay" id="pauseOverlay">
+              <span style="font-size: 32px;">⏸️</span>
+              <span style="font-size: 14px; font-weight: 600;">Simulasi Dijeda</span>
+              <div style="display: flex; gap: 8px; margin-top: 4px;">
+                <button class="primary-btn" style="height: 32px; padding: 0 14px; font-size: 12px;" onclick="resumeSimulation()">Lanjutkan</button>
+                <button class="primary-btn" style="height: 32px; padding: 0 14px; font-size: 12px; background-color: var(--surface-card); color: var(--text-primary); border: 1px solid var(--border-hairline);" onclick="exitGameToMonitoring()">Keluar ke Monitoring</button>
+              </div>
+            </div>
+          </div>
+
+          <p style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">
+            Sentuh emoji sehat sebelum menyentuh batas bawah. Hindari polutan dan limbah!
+          </p>
+        </div>
+
+        <!-- Result Screen (Waktu 45 Detik Selesai) -->
+        <div id="screen-win" style="display: none; text-align: center; padding: 24px 0;">
+          <div id="result-icon" style="font-size: 44px; margin-bottom: 8px;">⏱️</div>
+          <h3 id="result-title" style="font-size: 18px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">
+            Waktu 45 Detik Selesai!
+          </h3>
+          <div id="win-stars" style="font-size: 22px; margin: 6px 0 10px;">⭐⭐⭐</div>
+          <p id="result-subtitle" style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
+            Sesi simulasi selesai! Berikut ringkasan pencapaian skor kamu:
+          </p>
+
+          <div id="new-record-banner" style="display: none; background: var(--status-good-bg); border: 1px solid var(--status-good-border); color: var(--status-good); font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 6px; margin: 0 auto 12px; max-width: 320px;">
+            🎉 REKOR SKOR TERTINGGI BARU!
+          </div>
+
+          <div class="arcade-hud" style="max-width: 340px; margin: 0 auto 16px; text-align: left;">
+            <div class="hud-row">
+              <span style="font-size: 12px; color: var(--text-secondary);">Skor Akhir:</span>
+              <b class="mono" id="win-score" style="color: var(--text-primary); font-size: 16px;">0 Poin</b>
+            </div>
+            <div class="hud-row">
+              <span style="font-size: 12px; color: var(--text-secondary);">Skor Tertinggi:</span>
+              <b class="mono" id="win-highscore" style="color: var(--accent);">0 Poin</b>
+            </div>
+            <div class="hud-row">
+              <span style="font-size: 12px; color: var(--text-secondary);">Max Combo Streak:</span>
+              <b class="mono" id="win-combo" style="color: var(--text-primary);">0x</b>
+            </div>
+            <div class="hud-row">
+              <span style="font-size: 12px; color: var(--text-secondary);">Sisa Batas Kesempatan:</span>
+              <span id="win-lives">❤️❤️❤️</span>
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px; justify-content: center;">
+            <button class="primary-btn" onclick="startSimulation()">
+              <i data-lucide="rotate-ccw" style="width: 14px; height: 14px;"></i>
+              <span>Main Lagi</span>
+            </button>
+            <button class="primary-btn" style="background-color: var(--surface-raised); color: var(--text-secondary); border: 1px solid var(--border-hairline);" onclick="exitGameToMonitoring()">
+              <span>Selesai</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Game Over Screen (Kesempatan Habis) -->
+        <div id="screen-gameover" style="display: none; text-align: center; padding: 24px 0;">
+          <div id="gameover-icon" style="font-size: 44px; margin-bottom: 8px;">🌧️</div>
+          <h3 id="gameover-title" style="font-size: 18px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">
+            Batas Kesempatan Habis!
+          </h3>
+          <p id="gameover-desc" style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
+            Terlalu banyak partikel polutan yang mengenai instrumen sensor.
+          </p>
+
+          <div id="gameover-record-banner" style="display: none; background: var(--status-good-bg); border: 1px solid var(--status-good-border); color: var(--status-good); font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 6px; margin: 0 auto 12px; max-width: 320px;">
+            🎉 REKOR SKOR TERTINGGI BARU!
+          </div>
+
+          <div class="arcade-hud" style="max-width: 340px; margin: 0 auto 16px; text-align: left;">
+            <div class="hud-row">
+              <span style="font-size: 12px; color: var(--text-secondary);">Skor Diperoleh:</span>
+              <b class="mono" id="final-score-over" style="color: var(--text-primary); font-size: 16px;">0 Poin</b>
+            </div>
+            <div class="hud-row">
+              <span style="font-size: 12px; color: var(--text-secondary);">Skor Tertinggi:</span>
+              <b class="mono" id="over-highscore" style="color: var(--accent);">0 Poin</b>
+            </div>
+            <div class="hud-row">
+              <span style="font-size: 12px; color: var(--text-secondary);">Max Combo Streak:</span>
+              <b class="mono" id="over-combo" style="color: var(--text-primary);">0x</b>
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px; justify-content: center;">
+            <button class="primary-btn" onclick="startSimulation()">
+              <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i>
+              <span>Coba Lagi</span>
+            </button>
+            <button class="primary-btn" style="background-color: var(--surface-raised); color: var(--text-secondary); border: 1px solid var(--border-hairline);" onclick="exitGameToMonitoring()">
+              <span>Kembali</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal Sheet Detail -->
+  <div class="modal-backdrop" id="modalBackdrop" onclick="closeDetailModal(event)">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-icon-badge" id="modalIcon">
+          <i data-lucide="info" style="width: 18px; height: 18px;"></i>
+        </div>
+        <h3 id="modalTitle">Informasi Polutan</h3>
+      </div>
+      <div class="modal-content" id="modalContent">
+        Keterangan detail akan dimuat di sini.
+      </div>
+      <button class="modal-btn" onclick="closeDetailModal()">
+        Tutup
+      </button>
+    </div>
+  </div>
+
+  <!-- Discreet Toast -->
+  <div class="discreet-toast" id="discreetToast">
+    <span id="toastText">Pengaturan disimpan</span>
+  </div>
+
+  <footer class="app-footer">
+    <p>Sahabat Udara Bersih · Sistem Telemetri Kualitas Udara Sekolah Berbasis ESP32</p>
+  </footer>
+
+  <!-- =========================================================================
+       JavaScript Logic
+       ========================================================================= -->
+  <script>
+    // Inisialisasi ikon Lucide
+    lucide.createIcons();
+
+    // 1. Theme Controller
+    let currentTheme = "light";
+    let currentSensorLevel = "good";
+
+    function setAppTheme(theme) {
+      currentTheme = theme;
+      document.documentElement.setAttribute("data-theme", theme);
+      localStorage.setItem("sub_app_theme", theme);
+
+      const btnLight = document.getElementById("btnThemeLight");
+      const btnDark = document.getElementById("btnThemeDark");
+
+      if (btnLight && btnDark) {
+        if (theme === "dark") {
+          btnDark.classList.add("active");
+          btnLight.classList.remove("active");
+        } else {
+          btnLight.classList.add("active");
+          btnDark.classList.remove("active");
+        }
+      }
+      playSimpleFeedback();
+    }
+
+    function initTheme() {
+      const saved = localStorage.getItem("sub_app_theme");
+      if (saved === "dark" || saved === "light") {
+        setAppTheme(saved);
+      } else {
+        const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        setAppTheme(prefersDark ? "dark" : "light");
+      }
+    }
+    initTheme();
+
+    // 2. Navigation Tab Switcher
+    function switchTab(tabId, event) {
+      document.querySelectorAll(".section-view").forEach((s) => s.classList.remove("active"));
+      document.querySelectorAll(".nav-link").forEach((n) => n.classList.remove("active"));
+
+      const target = document.getElementById(tabId);
+      if (target) target.classList.add("active");
+
+      if (event && event.currentTarget) {
+        event.currentTarget.classList.add("active");
+      } else {
+        const matchingBtn = document.querySelector(`.nav-link[onclick*="'${tabId}'"]`);
+        if (matchingBtn) matchingBtn.classList.add("active");
+      }
+
+      const nav = document.getElementById("appNav");
+      if (nav.classList.contains("mobile-open")) nav.classList.remove("mobile-open");
+
+      // Menangani status game saat pindah tab agar tidak stuck/freeze
+      if (tabId !== "game") {
+        if (simActive) {
+          pauseSimulation();
+        }
+      } else {
+        // Jika kembali ke tab game dan sebelumnya di layar gameplay
+        const gameplayScreen = document.getElementById("screen-gameplay");
+        if (gameplayScreen && gameplayScreen.style.display === "flex") {
+          if (!simActive && simLives > 0 && simScore < 100 && simTimeLeft > 0) {
+            resumeSimulation();
+          }
+        }
+      }
+    }
+
+    function toggleMobileMenu() {
+      document.getElementById("appNav").classList.toggle("mobile-open");
+    }
+
+    // 3. Educational Modal Data & Handler
+    const modalData = {
+      putih: {
+        icon: "cloud",
+        title: "Asap Putih Tipis",
+        desc: "Dominan berupa uap air atau partikel ringan dari sisa pembakaran biomassa kering. Tidak pekat dan cepat terurai di ruang terbuka.<br><br><strong>Rekomendasi:</strong> Pastikan ventilasi udara ruang kelas tetap terbuka agar sirkulasi udara segar terjaga."
+      },
+      abu: {
+        icon: "wind",
+        title: "Asap Abu-abu Kabut",
+        desc: "Menandakan pembakaran tidak sempurna yang menghasilkan jelaga karbon dan partikulat halus. Dapat memicu batuk ringan pada siswa sensitif.<br><br><strong>Rekomendasi:</strong> Disarankan menggunakan masker pelindung saat melintasi area sumber asap."
+      },
+      hitam: {
+        icon: "flame",
+        title: "Asap Hitam Pekat",
+        desc: "Mengandung konsentrasi hidrokarbon, gas sulfur, dan senyawa dioksin dari pembakaran sampah plastik atau bahan sintetis.<br><br><strong>Rekomendasi:</strong> Tutup jendela kelas, matikan ventilasi luar, dan gunakan masker berstandar N95 atau medis."
+      },
+      sampah: {
+        icon: "trash-2",
+        title: "Pembakaran Sampah",
+        desc: "Pembakaran sampah domestik melepaskan senyawa karsinogenik yang dapat terhirup langsung oleh warga sekolah.<br><br><strong>Tindakan Edukasi:</strong> Galakkan pemilahan sampah organik untuk pupuk kompos dan daur ulang plastik."
+      },
+      kendaraan: {
+        icon: "car",
+        title: "Emisi Kendaraan",
+        desc: "Gas buang mesin menyumbang karbon monoksida yang tidak berbau dan mengikat sel darah merah lebih cepat dibanding oksigen.<br><br><strong>Tindakan Edukasi:</strong> Matikan mesin kendaraan saat menunggu penjemputan di area sekolah."
+      },
+      lahan: {
+        icon: "trees",
+        title: "Kebakaran Lahan",
+        desc: "Pelepasan partikulat halus PM2.5 berskala masif yang mampu menembus saluran paru-paru terdalam.<br><br><strong>Tindakan Edukasi:</strong> Pantau indeks konsentrasi stasiun sensor dan kurangi olahraga luar saat indeks sedang tinggi."
+      },
+      tenggorokan: {
+        icon: "activity",
+        title: "Iritasi Tenggorokan",
+        desc: "Partikulat asap menempel pada dinding lendir saluran napas dan memicu refleks batuk kering.<br><br><strong>Penanganan:</strong> Minum air putih hangat dan istirahat sejenak di ruang berventilasi bersih."
+      },
+      paruparu: {
+        icon: "heart-pulse",
+        title: "Sesak Napas",
+        desc: "Penyempitan bronkus akibat reaksi alergen atau inflamasi gas polutan.<br><br><strong>Penanganan:</strong> Istirahat dengan posisi duduk tegak, gunakan obat pereda bagi penderita asma, dan hubungi UKS sekolah."
+      },
+      mata: {
+        icon: "eye",
+        title: "Iritasi Mata",
+        desc: "Zat asam pada asap menempel pada selaput mata dan mengikis lapisan air mata.<br><br><strong>Penanganan:</strong> Bilas mata dengan air bersih mengalir atau gunakan obat tetes mata steril."
+      }
+    };
+
+    function openDetailModal(key) {
+      const item = modalData[key];
+      if (!item) return;
+
+      document.getElementById("modalTitle").textContent = item.title;
+      document.getElementById("modalContent").innerHTML = item.desc;
+      document.getElementById("modalIcon").innerHTML = `<i data-lucide="${item.icon}" style="width: 18px; height: 18px;"></i>`;
+      lucide.createIcons();
+
+      document.getElementById("modalBackdrop").classList.add("active");
+    }
+
+    function closeDetailModal(event) {
+      if (event && event.target !== document.getElementById("modalBackdrop") && !event.target.classList.contains("modal-btn")) {
+        return;
+      }
+      document.getElementById("modalBackdrop").classList.remove("active");
+    }
+
+    // 4. Status Level & Simulation Controller
+    function setSensorLevel(level, event) {
+      currentSensorLevel = level;
+      const strip = document.getElementById("statusStrip");
+      const dot = document.getElementById("statusDot");
+      const title = document.getElementById("statusTitle");
+      const desc = document.getElementById("statusDesc");
+      const arc = document.getElementById("dialArc");
+      const chip = document.getElementById("chipCO2");
+      const stationDot = document.getElementById("stationDot");
+
+      document.querySelectorAll(".simulation-btn").forEach((b) => b.classList.remove("active"));
+      if (event && event.currentTarget) {
+        event.currentTarget.classList.add("active");
+      }
+
+      if (level === "good") {
+        strip.style.backgroundColor = "var(--status-good-bg)";
+        strip.style.borderColor = "var(--status-good-border)";
+        dot.style.backgroundColor = "var(--status-good)";
+        stationDot.style.backgroundColor = "var(--status-good)";
+        arc.style.stroke = "var(--status-good)";
+        arc.style.strokeDashoffset = "240";
+        title.textContent = "Kualitas Udara Baik";
+        desc.textContent = "Konsentrasi gas dalam batas aman untuk seluruh aktivitas belajar mengajar";
+        if (chip) chip.textContent = "Normal";
+      } else if (level === "mid") {
+        strip.style.backgroundColor = "var(--status-mid-bg)";
+        strip.style.borderColor = "var(--status-mid-border)";
+        dot.style.backgroundColor = "var(--status-mid)";
+        stationDot.style.backgroundColor = "var(--status-mid)";
+        arc.style.stroke = "var(--status-mid)";
+        arc.style.strokeDashoffset = "130";
+        title.textContent = "Kualitas Udara Sedang";
+        desc.textContent = "Kadar polutan meningkat, siswa dengan riwayat sensitif dianjurkan memakai masker";
+        if (chip) chip.textContent = "Waspada";
+      } else {
+        strip.style.backgroundColor = "var(--status-bad-bg)";
+        strip.style.borderColor = "var(--status-bad-border)";
+        dot.style.backgroundColor = "var(--status-bad)";
+        stationDot.style.backgroundColor = "var(--status-bad)";
+        arc.style.stroke = "var(--status-bad)";
+        arc.style.strokeDashoffset = "25";
+        title.textContent = "Kadar Polutan Tinggi";
+        desc.textContent = "Kondisi tidak disarankan untuk aktivitas luar ruangan, tutup ventilasi ruang";
+        if (chip) chip.textContent = "Bahaya";
+      }
+    }
+
+    // 5. Audio Synthesizer (Subtle, gentle feedback)
+    let audioCtx = null;
+    function getAudioCtx() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === "suspended") audioCtx.resume();
+      return audioCtx;
+    }
+
+    function playSimpleFeedback(type, multiplier = 1) {
+      try {
+        const ctx = getAudioCtx();
+        const t = ctx.currentTime;
+
+        if (type === "good") {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.type = "sine";
+          const baseFreq = 520 + Math.min(multiplier - 1, 4) * 85;
+          osc.frequency.setValueAtTime(baseFreq, t);
+          osc.frequency.setValueAtTime(baseFreq * 1.25, t + 0.04);
+          gain.gain.setValueAtTime(0.08, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.14);
+          osc.start(t);
+          osc.stop(t + 0.14);
+        } else if (type === "bad") {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(240, t);
+          osc.frequency.setValueAtTime(140, t + 0.08);
+          gain.gain.setValueAtTime(0.09, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
+          osc.start(t);
+          osc.stop(t + 0.18);
+        } else if (type === "miss") {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(320, t);
+          osc.frequency.setValueAtTime(220, t + 0.06);
+          gain.gain.setValueAtTime(0.05, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+          osc.start(t);
+          osc.stop(t + 0.12);
+        } else if (type === "powerup") {
+          [523.25, 659.25, 783.99, 1046.5].forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(freq, t + idx * 0.04);
+            gain.gain.setValueAtTime(0.06, t + idx * 0.04);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + idx * 0.04 + 0.1);
+            osc.start(t + idx * 0.04);
+            osc.stop(t + idx * 0.04 + 0.1);
+          });
+        } else if (type === "flash") {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.type = "sawtooth";
+          osc.frequency.setValueAtTime(880, t);
+          osc.frequency.exponentialRampToValueAtTime(220, t + 0.22);
+          gain.gain.setValueAtTime(0.06, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+          osc.start(t);
+          osc.stop(t + 0.22);
+        } else if (type === "shield_break") {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(540, t);
+          osc.frequency.setValueAtTime(280, t + 0.09);
+          gain.gain.setValueAtTime(0.08, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+          osc.start(t);
+          osc.stop(t + 0.2);
+        } else if (type === "tick") {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(800, t);
+          gain.gain.setValueAtTime(0.03, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
+          osc.start(t);
+          osc.stop(t + 0.04);
+        } else if (type === "win") {
+          [523.25, 659.25, 783.99, 1046.5].forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(freq, t + idx * 0.08);
+            gain.gain.setValueAtTime(0.08, t + idx * 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + idx * 0.08 + 0.25);
+            osc.start(t + idx * 0.08);
+            osc.stop(t + idx * 0.08 + 0.25);
+          });
+        }
+      } catch (e) {}
+    }
+
+    function showDiscreetToast(msg) {
+      const toast = document.getElementById("discreetToast");
+      document.getElementById("toastText").textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 1200);
+    }
+
+    // 6. Educational Arcade Engine (High Score Attack, 45s Timer, Dynamic Waves & Unlimited Score)
+    let simScore = 0;
+    let simLives = 3;
+    let simTimeLeft = 45;
+    let simComboStreak = 0;
+    let simMaxCombo = 0;
+    let simShield = false;
+    let simLevel = 1;
+    let simActive = false;
+    let simPaused = false;
+    let spawnTimer = null;
+    let countdownTimer = null;
+    const activeDropTimers = new Set();
+
+    // Rekor Skor Tertinggi (tersimpan di LocalStorage browser)
+    let simHighScore = parseInt(localStorage.getItem("sub_arcade_highscore") || "0", 10);
+    if (isNaN(simHighScore)) simHighScore = 0;
+
+    function updateHighScoreDisplays() {
+      const menuEl = document.getElementById("menuHighScore");
+      if (menuEl) menuEl.innerText = `${simHighScore} Poin`;
+      const hudEl = document.getElementById("hudHighScore");
+      if (hudEl) hudEl.innerText = simHighScore;
+    }
+
+    const simItems = [
+      // Objek Sehat (+poin)
+      { name: "Pohon Asri", type: "good", points: 10, emoji: "🌳", weight: 20 },
+      { name: "Masker Sehat", type: "good", points: 10, emoji: "😷", weight: 20 },
+      { name: "Awan Bersih", type: "good", points: 10, emoji: "☁️", weight: 15 },
+      { name: "Daun Segar", type: "good", points: 5, emoji: "🍃", weight: 15 },
+      { name: "Air Murni", type: "good", points: 5, emoji: "💧", weight: 15 },
+
+      // Polutan Ringan / Sedang (-1 ❤️)
+      { name: "Asap Industri", type: "bad", damage: 1, emoji: "🏭", weight: 18 },
+      { name: "Gas Knalpot", type: "bad", damage: 1, emoji: "🚗", weight: 18 },
+      { name: "Bakar Sampah", type: "bad", damage: 1, emoji: "🗑️", weight: 15 },
+      { name: "Debu Pekat", type: "bad", damage: 1, emoji: "💨", weight: 12 },
+
+      // Bahaya Toksik Berat (-2 ❤️)
+      { name: "Limbah Beracun", type: "hazard", damage: 2, emoji: "☣️", weight: 8 },
+
+      // Power-ups Spesial
+      { name: "Perisai Udara", type: "shield", emoji: "🛡️", weight: 6 },
+      { name: "Filter Kilat", type: "flash", points: 15, emoji: "⚡", weight: 5 },
+    ];
+
+    function updateHUD() {
+      // 1. Skor Display (Unlimited High Score)
+      const scoreEl = document.getElementById("score-display");
+      if (scoreEl) scoreEl.innerText = simScore;
+
+      // 2. Batas Kesempatan (Hearts)
+      const livesEl = document.getElementById("lives-display");
+      if (livesEl) {
+        let hearts = "";
+        for (let i = 0; i < Math.max(0, simLives); i++) hearts += "❤️";
+        for (let i = Math.max(0, simLives); i < 3; i++) hearts += "🖤";
+        livesEl.innerText = hearts;
+      }
+
+      // 3. Timer Countdown (45 Detik)
+      const timeEl = document.getElementById("time-display");
+      const timerPill = document.getElementById("timerPill");
+      if (timeEl) {
+        const mins = Math.floor(Math.max(0, simTimeLeft) / 60);
+        const secs = Math.max(0, simTimeLeft) % 60;
+        timeEl.innerText = `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+      }
+      if (timerPill) {
+        if (simTimeLeft <= 10 && simTimeLeft > 0) {
+          timerPill.classList.add("urgent");
+        } else {
+          timerPill.classList.remove("urgent");
+        }
+      }
+
+      // 4. Combo Streak & Multiplier
+      const streakEl = document.getElementById("streakDisplay");
+      if (streakEl) streakEl.innerText = simComboStreak;
+
+      const comboBadge = document.getElementById("comboBadge");
+      if (comboBadge) {
+        if (simComboStreak >= 10) {
+          comboBadge.textContent = "SUPER COMBO 4x 🌟";
+          comboBadge.style.display = "inline-flex";
+          comboBadge.style.backgroundColor = "var(--status-bad)";
+        } else if (simComboStreak >= 6) {
+          comboBadge.textContent = "COMBO 3x ⚡";
+          comboBadge.style.display = "inline-flex";
+          comboBadge.style.backgroundColor = "var(--status-mid)";
+        } else if (simComboStreak >= 3) {
+          comboBadge.textContent = "COMBO 2x 🔥";
+          comboBadge.style.display = "inline-flex";
+          comboBadge.style.backgroundColor = "var(--status-mid)";
+        } else {
+          comboBadge.style.display = "none";
+        }
+      }
+
+      // 5. Shield Badge
+      const shieldBadge = document.getElementById("shieldBadge");
+      if (shieldBadge) {
+        shieldBadge.style.display = simShield ? "inline-flex" : "none";
+      }
+
+      // 6. Dynamic Level Wave (Skor Tanpa Batas)
+      let currentLevel = 1;
+      let levelText = "LEVEL 1: UDARA PAGI";
+      if (simScore >= 180) {
+        currentLevel = 3;
+        levelText = "LEVEL 3: BADAI POLUSI ☠️";
+      } else if (simScore >= 70) {
+        currentLevel = 2;
+        levelText = "LEVEL 2: ANGIN KENCANG 🌪️";
+      }
+      simLevel = currentLevel;
+      const levelEl = document.getElementById("levelDisplay");
+      if (levelEl) levelEl.innerText = levelText;
+    }
+
+    function setScreen(id) {
+      ["screen-menu", "screen-gameplay", "screen-win", "screen-gameover"].forEach((s) => {
+        const el = document.getElementById(s);
+        if (el) el.style.display = "none";
+      });
+      const target = document.getElementById(id);
+      if (target) {
+        target.style.display = (id === "screen-gameplay" || id === "screen-menu") ? "flex" : "block";
+      }
+      lucide.createIcons();
+    }
+
+    function startCountdown() {
+      if (countdownTimer) clearInterval(countdownTimer);
+      countdownTimer = setInterval(() => {
+        if (!simActive || simPaused) return;
+
+        simTimeLeft--;
+        if (simTimeLeft <= 10 && simTimeLeft > 0) {
+          playSimpleFeedback("tick");
+        }
+        updateHUD();
+
+        if (simTimeLeft <= 0) {
+          clearInterval(countdownTimer);
+          countdownTimer = null;
+          triggerTimeUp();
+        }
+      }, 1000);
+    }
+
+    function pauseSimulation() {
+      if (simActive) {
+        simActive = false;
+        simPaused = true;
+        if (spawnTimer) {
+          clearInterval(spawnTimer);
+          spawnTimer = null;
+        }
+        if (countdownTimer) {
+          clearInterval(countdownTimer);
+          countdownTimer = null;
+        }
+        const overlay = document.getElementById("pauseOverlay");
+        if (overlay) overlay.style.display = "flex";
+        const pauseText = document.getElementById("pauseBtnText");
+        if (pauseText) pauseText.textContent = "▶️ Lanjut";
+      }
+    }
+
+    function resumeSimulation() {
+      const gameplayScreen = document.getElementById("screen-gameplay");
+      if (gameplayScreen && gameplayScreen.style.display === "flex") {
+        if (simLives <= 0 || simTimeLeft <= 0) return;
+        simActive = true;
+        simPaused = false;
+        updateHUD();
+
+        const overlay = document.getElementById("pauseOverlay");
+        if (overlay) overlay.style.display = "none";
+        const pauseText = document.getElementById("pauseBtnText");
+        if (pauseText) pauseText.textContent = "⏸️ Jeda";
+
+        startCountdown();
+
+        if (spawnTimer) clearInterval(spawnTimer);
+        const spawnIntervalMs = simLevel === 3 ? 800 : simLevel === 2 ? 950 : 1100;
+        spawnTimer = setInterval(() => {
+          if (!simActive || simPaused) return;
+          spawnDrop();
+        }, spawnIntervalMs);
+
+        spawnDrop();
+      }
+    }
+
+    function togglePauseSimulation() {
+      if (simActive) {
+        pauseSimulation();
+      } else if (simPaused || (simLives > 0 && simTimeLeft > 0)) {
+        resumeSimulation();
+      }
+    }
+
+    // Tangani saat pengguna berpindah tab jendela browser
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        if (simActive) pauseSimulation();
+      } else {
+        const gameSection = document.getElementById("game");
+        const gameplayScreen = document.getElementById("screen-gameplay");
+        if (gameSection && gameSection.classList.contains("active") && gameplayScreen && gameplayScreen.style.display === "flex") {
+          if (!simActive && simLives > 0 && simTimeLeft > 0) {
+            resumeSimulation();
+          }
+        }
+      }
+    });
+
+    function startSimulation() {
+      simScore = 0;
+      simLives = 3;
+      simTimeLeft = 45;
+      simComboStreak = 0;
+      simMaxCombo = 0;
+      simShield = false;
+      simLevel = 1;
+      simActive = true;
+      simPaused = false;
+
+      // Bersihkan drop interval sebelumnya agar tidak menumpuk
+      activeDropTimers.forEach((t) => clearInterval(t));
+      activeDropTimers.clear();
+
+      updateHUD();
+      updateHighScoreDisplays();
+      setScreen("screen-gameplay");
+
+      const board = document.getElementById("arcade-board");
+      if (board) {
+        const drops = board.querySelectorAll(".game-drop-item");
+        drops.forEach((d) => d.remove());
+        const overlay = document.getElementById("pauseOverlay");
+        if (overlay) overlay.style.display = "none";
+      }
+
+      const pauseText = document.getElementById("pauseBtnText");
+      if (pauseText) pauseText.textContent = "⏸️ Jeda";
+
+      startCountdown();
+
+      if (spawnTimer) clearInterval(spawnTimer);
+      const spawnIntervalMs = simLevel === 3 ? 800 : simLevel === 2 ? 950 : 1100;
+      spawnTimer = setInterval(() => {
+        if (!simActive || simPaused) return;
+        spawnDrop();
+      }, spawnIntervalMs);
+
+      spawnDrop();
+    }
+
+    function getRandomSimItem() {
+      let pool = simItems.slice();
+      if (simLevel === 1) {
+        // Pada level 1 belum ada limbah beracun ☣️
+        pool = pool.filter((it) => it.type !== "hazard");
+      }
+      const totalWeight = pool.reduce((acc, it) => acc + (it.weight || 10), 0);
+      let rand = Math.random() * totalWeight;
+      for (const it of pool) {
+        rand -= (it.weight || 10);
+        if (rand <= 0) return it;
+      }
+      return pool[0];
+    }
+
+    function spawnDrop() {
+      const board = document.getElementById("arcade-board");
+      if (!board) return;
+      const item = getRandomSimItem();
+
+      const el = document.createElement("div");
+      el.className = "game-drop-item";
+      el.innerHTML = item.emoji;
+      el.dataset.type = item.type;
+
+      // Posisi horizontal awal (12% hingga 85%)
+      const baseX = Math.floor(Math.random() * 73) + 12;
+      el.style.left = `${baseX}%`;
+      el.style.top = "-48px";
+
+      board.appendChild(el);
+
+      let topPos = -48;
+      // Kecepatan adaptif berdasarkan level
+      let baseSpeed = Math.random() * 0.8 + 1.2;
+      if (simLevel === 2) baseSpeed += 0.7;
+      if (simLevel === 3) baseSpeed += 1.3;
+
+      // Parameter goyangan angin horizontal (wind drift)
+      const windAmplitude = simLevel === 3 ? 20 : simLevel === 2 ? 12 : 0;
+      const windFrequency = simLevel === 3 ? 0.06 : 0.04;
+      const phaseOffset = Math.random() * Math.PI * 2;
+
+      let timer = null;
+      timer = setInterval(() => {
+        if (!simActive) {
+          if (!simPaused) {
+            clearInterval(timer);
+            activeDropTimers.delete(timer);
+            if (el.parentNode) el.remove();
+          }
+          return;
+        }
+
+        topPos += baseSpeed;
+        el.style.top = `${topPos}px`;
+
+        if (windAmplitude > 0) {
+          const sway = Math.sin(topPos * windFrequency + phaseOffset) * windAmplitude;
+          el.style.transform = `translate(calc(-50% + ${sway}px), 0)`;
+        }
+
+        // Cek jika item mencapai batas bawah board
+        if (topPos >= board.clientHeight - 48) {
+          clearInterval(timer);
+          activeDropTimers.delete(timer);
+          if (el.parentNode) el.remove();
+
+          // Penalti untuk item sehat yang terlewat
+          if (item.type === "good") {
+            simScore = Math.max(0, simScore - 3);
+            simComboStreak = 0; // Combo reset saat miss
+            updateHUD();
+            playSimpleFeedback("miss");
+            showDiscreetToast("Partikel Sehat Terlewat! -3 Poin ⚠️");
+          }
+        }
+      }, 25);
+
+      activeDropTimers.add(timer);
+
+      el.onclick = function (e) {
+        if (!simActive) return;
+        e.stopPropagation();
+        clearInterval(timer);
+        activeDropTimers.delete(timer);
+        el.remove();
+
+        // 1. Objek Sehat (+poin dengan Combo Multiplier)
+        if (item.type === "good") {
+          simComboStreak++;
+          if (simComboStreak > simMaxCombo) simMaxCombo = simComboStreak;
+
+          let multiplier = 1;
+          if (simComboStreak >= 10) multiplier = 4;
+          else if (simComboStreak >= 6) multiplier = 3;
+          else if (simComboStreak >= 3) multiplier = 2;
+
+          const earned = item.points * multiplier;
+          simScore += earned;
+
+          // Cek pembaruan Skor Tertinggi seketika
+          if (simScore > simHighScore) {
+            simHighScore = simScore;
+            localStorage.setItem("sub_arcade_highscore", simHighScore);
+            updateHighScoreDisplays();
+          }
+
+          playSimpleFeedback("good", multiplier);
+          updateHUD();
+
+          const comboTxt = multiplier > 1 ? ` (${multiplier}x Combo!)` : "";
+          showDiscreetToast(`+${earned} poin: ${item.emoji} ${item.name}${comboTxt}`);
+        }
+        // 2. Polutan atau Bahaya (-❤️)
+        else if (item.type === "bad" || item.type === "hazard") {
+          simComboStreak = 0; // Reset combo
+
+          if (simShield) {
+            // Perisai aktif menahan serangan
+            simShield = false;
+            playSimpleFeedback("shield_break");
+            updateHUD();
+            showDiscreetToast(`🛡️ Perisai Udara menahan ${item.emoji} ${item.name}!`);
+          } else {
+            const dmg = item.damage || 1;
+            simLives -= dmg;
+            playSimpleFeedback("bad");
+            updateHUD();
+            showDiscreetToast(`Terkena ${item.emoji} ${item.name} (-${dmg} ❤️)!`);
+
+            if (simLives <= 0) triggerGameOver("lives");
+          }
+        }
+        // 3. Power-Up: Perisai (Shield)
+        else if (item.type === "shield") {
+          simShield = true;
+          playSimpleFeedback("powerup");
+          updateHUD();
+          showDiscreetToast("🛡️ Perisai Aktif! Menahan 1 serangan polutan.");
+        }
+        // 4. Power-Up: Filter Kilat (Flash Filter)
+        else if (item.type === "flash") {
+          const currentDrops = board.querySelectorAll(".game-drop-item");
+          let clearedCount = 0;
+          currentDrops.forEach((d) => {
+            if (d.dataset.type === "bad" || d.dataset.type === "hazard") {
+              d.remove();
+              clearedCount++;
+            }
+          });
+          simScore += 15;
+          if (simScore > simHighScore) {
+            simHighScore = simScore;
+            localStorage.setItem("sub_arcade_highscore", simHighScore);
+            updateHighScoreDisplays();
+          }
+          playSimpleFeedback("flash");
+          updateHUD();
+          showDiscreetToast(`⚡ Filter Kilat! ${clearedCount} Polutan dibersihkan (+15 poin)!`);
+        }
+      };
+    }
+
+    function triggerTimeUp() {
+      simActive = false;
+      simPaused = false;
+      if (spawnTimer) clearInterval(spawnTimer);
+      if (countdownTimer) clearInterval(countdownTimer);
+      activeDropTimers.forEach((t) => clearInterval(t));
+      activeDropTimers.clear();
+
+      playSimpleFeedback("win");
+
+      let isNewRecord = false;
+      if (simScore > simHighScore) {
+        simHighScore = simScore;
+        localStorage.setItem("sub_arcade_highscore", simHighScore);
+        isNewRecord = true;
+      }
+      updateHighScoreDisplays();
+
+      const recordBanner = document.getElementById("new-record-banner");
+      if (recordBanner) {
+        recordBanner.style.display = isNewRecord ? "block" : "none";
+      }
+
+      const scoreEl = document.getElementById("win-score");
+      if (scoreEl) scoreEl.innerText = `${simScore} Poin`;
+
+      const highScoreEl = document.getElementById("win-highscore");
+      if (highScoreEl) highScoreEl.innerText = `${simHighScore} Poin`;
+
+      const comboEl = document.getElementById("win-combo");
+      if (comboEl) comboEl.innerText = `${simMaxCombo}x Streak`;
+
+      const livesEl = document.getElementById("win-lives");
+      if (livesEl) {
+        let hearts = "";
+        for (let i = 0; i < Math.max(0, simLives); i++) hearts += "❤️";
+        for (let i = Math.max(0, simLives); i < 3; i++) hearts += "🖤";
+        livesEl.innerText = hearts;
+      }
+
+      let stars = "⭐⭐⭐";
+      if (simScore < 80) stars = "⭐";
+      else if (simScore < 160) stars = "⭐⭐";
+      const starsEl = document.getElementById("win-stars");
+      if (starsEl) starsEl.innerText = stars;
+
+      setScreen("screen-win");
+    }
+
+    function triggerGameOver(reason) {
+      simActive = false;
+      simPaused = false;
+      if (spawnTimer) clearInterval(spawnTimer);
+      if (countdownTimer) clearInterval(countdownTimer);
+      activeDropTimers.forEach((t) => clearInterval(t));
+      activeDropTimers.clear();
+
+      playSimpleFeedback("bad");
+
+      let isNewRecord = false;
+      if (simScore > simHighScore) {
+        simHighScore = simScore;
+        localStorage.setItem("sub_arcade_highscore", simHighScore);
+        isNewRecord = true;
+      }
+      updateHighScoreDisplays();
+
+      const recordBanner = document.getElementById("gameover-record-banner");
+      if (recordBanner) {
+        recordBanner.style.display = isNewRecord ? "block" : "none";
+      }
+
+      const scoreEl = document.getElementById("final-score-over");
+      if (scoreEl) scoreEl.innerText = `${simScore} Poin`;
+
+      const highScoreEl = document.getElementById("over-highscore");
+      if (highScoreEl) highScoreEl.innerText = `${simHighScore} Poin`;
+
+      const comboEl = document.getElementById("over-combo");
+      if (comboEl) comboEl.innerText = `${simMaxCombo}x Streak`;
+
+      setScreen("screen-gameover");
+    }
+
+    function returnToMenu() {
+      simActive = false;
+      simPaused = false;
+      if (spawnTimer) clearInterval(spawnTimer);
+      if (countdownTimer) clearInterval(countdownTimer);
+      activeDropTimers.forEach((t) => clearInterval(t));
+      activeDropTimers.clear();
+
+      const board = document.getElementById("arcade-board");
+      if (board) {
+        const drops = board.querySelectorAll(".game-drop-item");
+        drops.forEach((d) => d.remove());
+        const overlay = document.getElementById("pauseOverlay");
+        if (overlay) overlay.style.display = "none";
+      }
+      updateHighScoreDisplays();
+      setScreen("screen-menu");
+    }
+
+    function exitGameToMonitoring() {
+      returnToMenu();
+      switchTab("monitoring");
+    }
+
+    // Inisialisasi tampilan High Score saat halaman dimuat
+    updateHighScoreDisplays();
+  </script>
+
+  <!-- =========================================================================
+       Firebase Realtime Telemetry Sync
+       ========================================================================= -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
+    import {
+      getDatabase,
+      ref,
+      onValue,
+    } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBHBGKnYdED6dny4ZrTUP4fbbF4_SIuRko",
+      authDomain: "sahabat-udara-bersih-b3629.firebaseapp.com",
+      projectId: "sahabat-udara-bersih-b3629",
+      storageBucket: "sahabat-udara-bersih-b3629.firebasestorage.app",
+      messagingSenderId: "518239132010",
+      appId: "1:518239132010:web:4587ae47ebf62ee636ad13",
+      databaseURL:
+        "https://sahabat-udara-bersih-b3629-default-rtdb.asia-southeast1.firebasedatabase.app",
+    };
+
+    try {
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
+
+      onValue(
+        ref(db, "sensor/current"),
+        (snap) => {
+          const d = snap.val();
+          if (!d) return;
+
+          const co2 = d.co2 !== undefined ? d.co2 : (d.pm25 !== undefined ? d.pm25 : 0);
+          const co = d.co !== undefined ? d.co : 0;
+          const temp = d.temperature !== undefined ? d.temperature : 0;
+
+          const pmEl = document.getElementById("valPM");
+          const pmTileEl = document.getElementById("valPMTile");
+          const coEl = document.getElementById("valCO");
+          const tempEl = document.getElementById("valTemp");
+
+          if (pmEl) pmEl.textContent = co2;
+          if (pmTileEl) pmTileEl.textContent = `${co2} ppm`;
+          if (coEl) coEl.textContent = typeof co === "number" ? co.toFixed(1) + " ppm" : co;
+          if (tempEl) tempEl.textContent = (typeof temp === "number" ? temp.toFixed(1) : temp) + "°C";
+
+          if (co2 > 1000 || co > 9.0) {
+            setSensorLevel("bad");
+          } else if (co2 > 600 || co > 4.4) {
+            setSensorLevel("mid");
+          } else {
+            setSensorLevel("good");
+          }
+        },
+        (err) => console.warn("Firebase listener note:", err.message)
+      );
+    } catch (e) {
+      console.warn("Firebase init note:", e);
+    }
+  </script>
+</body>
+
+</html>
