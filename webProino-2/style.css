@@ -107,6 +107,13 @@
 }
 
 /* 2. Base & Typography */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
+  position: relative;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -629,18 +636,7 @@ main.main-content {
   96% { transform: translateX(2px); }
 }
 
-@media (max-width: 600px) {
-  .mascot-card {
-    flex-direction: column;
-    text-align: center;
-  }
-  .mascot-bubble::before {
-    display: none;
-  }
-  .mascot-bubble-header {
-    justify-content: center;
-  }
-}
+/* mascot mobile handled in comprehensive responsive section */
 
 /* 6. Central Telemetry Dial */
 .instrument-stage {
@@ -1679,12 +1675,7 @@ main.main-content {
   font-weight: 600;
 }
 
-@media (max-width: 720px) {
-  .standard-tier-row {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-}
+/* standard mobile handled in comprehensive responsive section */
 
 /* 12. Footer */
 footer.app-footer {
@@ -1695,4 +1686,475 @@ footer.app-footer {
   color: var(--text-muted);
   border-top: 2px solid var(--border-hairline);
   background-color: var(--surface-card);
+}
+
+
+/* ==========================================================================
+   COMPREHENSIVE RESPONSIVE & MOBILE OVERHAUL (SMARTPHONE & TABLET)
+   Ensures perfect alignment, zero horizontal overflow, and clean mobile UX.
+   ========================================================================== */
+
+@media (max-width: 680px) {
+  /* Header Mobile */
+  header.app-header {
+    min-height: 58px;
+    height: 58px;
+  }
+
+  .header-container {
+    padding: 0 12px;
+    gap: 6px;
+  }
+
+  .brand-section {
+    gap: 8px;
+    min-width: 0;
+    max-width: calc(100% - 110px);
+  }
+
+  .brand-mark {
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
+    font-size: 16px;
+  }
+
+  .brand-titles {
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .brand-title {
+    font-size: 13.5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .brand-meta {
+    font-size: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Compact Theme Switcher: Hide text, keep cute emoji pills */
+  .theme-switch {
+    padding: 2px;
+    gap: 2px;
+  }
+
+  .theme-label {
+    display: none;
+  }
+
+  .theme-btn {
+    padding: 3px 6px;
+    height: 28px;
+    width: 28px;
+    min-width: 28px;
+    justify-content: center;
+    font-size: 13px;
+  }
+
+  .mobile-menu-btn {
+    width: 32px;
+    height: 32px;
+    padding: 4px;
+  }
+
+  /* Main & Cards Padding */
+  main.main-content {
+    padding: 14px 12px 36px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .content-card {
+    padding: 16px 14px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+    width: 100%;
+  }
+
+  .card-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+  }
+
+  .card-top-info h2 {
+    font-size: 17px;
+  }
+
+  .card-top-info p {
+    font-size: 12.5px;
+  }
+
+  .station-stamp {
+    font-size: 11px;
+    padding: 4px 10px;
+    align-self: flex-start;
+  }
+
+  /* Mascot Card Mobile Optimization */
+  .mascot-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 16px 14px;
+    border-radius: 18px;
+    gap: 12px;
+    margin-bottom: 16px;
+    width: 100%;
+  }
+
+  .mascot-avatar-wrap {
+    width: 100%;
+    align-items: center;
+  }
+
+  .mascot-avatar {
+    font-size: 40px;
+  }
+
+  .mascot-badge {
+    font-size: 11px;
+    padding: 2px 10px;
+  }
+
+  .mascot-bubble {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 16px;
+    text-align: center;
+  }
+
+  .mascot-bubble::before {
+    display: none;
+  }
+
+  .mascot-bubble-header {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  .mascot-name {
+    font-size: 12.5px;
+  }
+
+  .mascot-status-tag {
+    font-size: 11.5px;
+    padding: 3px 10px;
+  }
+
+  .mascot-speech {
+    font-size: 13px;
+    line-height: 1.45;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+
+  .mascot-tip {
+    font-size: 11.5px;
+    line-height: 1.4;
+    padding: 6px 10px;
+    border-radius: 10px;
+    text-align: center;
+  }
+
+  /* Dial Mobile */
+  .instrument-stage {
+    gap: 16px;
+    padding: 4px 0 12px;
+    width: 100%;
+  }
+
+  .dial-container {
+    width: 170px;
+    height: 170px;
+  }
+
+  .readout-value {
+    font-size: 36px;
+  }
+
+  .readout-label {
+    font-size: 12px;
+  }
+
+  .readout-unit {
+    font-size: 11.5px;
+  }
+
+  /* Status Strip Mobile */
+  .status-strip {
+    padding: 12px 14px;
+    border-radius: 14px;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .status-text-block h3 {
+    font-size: 13.5px;
+  }
+
+  .status-text-block p {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  /* Telemetry Grid Mobile */
+  .telemetry-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .telemetry-card {
+    padding: 12px 14px;
+    border-radius: 16px;
+  }
+
+  .telemetry-val {
+    font-size: 24px;
+  }
+
+  /* Standard Banner Mobile */
+  .standard-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    width: 100%;
+  }
+
+  .standard-banner-text {
+    font-size: 12px;
+  }
+
+  .standard-banner-link {
+    align-self: flex-end;
+    font-size: 12px;
+  }
+
+  /* Simulation Buttons Mobile (Vertical Stack) */
+  .simulation-bar {
+    width: 100%;
+  }
+
+  .simulation-group {
+    flex-direction: column;
+    gap: 6px;
+    padding: 6px;
+    border-radius: 16px;
+    width: 100%;
+  }
+
+  .simulation-btn {
+    width: 100%;
+    min-height: 38px;
+    font-size: 12.5px;
+    justify-content: center;
+  }
+
+  /* Standar Section Mobile */
+  .standard-grid {
+    gap: 14px;
+    width: 100%;
+  }
+
+  .standard-card {
+    padding: 16px 14px;
+    border-radius: 18px;
+    width: 100%;
+  }
+
+  .standard-header {
+    gap: 10px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+  }
+
+  .standard-header-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+    border-radius: 12px;
+  }
+
+  .standard-header-info h3 {
+    font-size: 15px;
+  }
+
+  .standard-header-info p {
+    font-size: 12px;
+  }
+
+  .standard-callout {
+    font-size: 12px;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    border-radius: 0 10px 10px 0;
+  }
+
+  .standard-tiers {
+    gap: 8px;
+    width: 100%;
+  }
+
+  .standard-tier-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
+    padding: 10px 12px;
+    border-radius: 12px;
+    width: 100%;
+  }
+
+  .standard-range {
+    font-size: 12px;
+  }
+
+  .standard-tag {
+    font-size: 11px;
+    padding: 2px 8px;
+  }
+
+  .standard-desc {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  /* Educational Cards Mobile */
+  .cards-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .card-item {
+    padding: 16px 14px;
+    border-radius: 16px;
+    width: 100%;
+  }
+
+  .card-item h3 {
+    font-size: 15px;
+  }
+
+  .card-item p {
+    font-size: 12.5px;
+    margin-bottom: 10px;
+  }
+
+  /* Arcade Game Mobile */
+  .arcade-panel {
+    padding: 16px 6px;
+    width: 100%;
+  }
+
+  .arcade-panel h2 {
+    font-size: 18px;
+  }
+
+  .arcade-desc {
+    font-size: 13px;
+    margin-bottom: 14px;
+  }
+
+  .arcade-instructions {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 18px;
+    width: 100%;
+  }
+
+  .instruction-block {
+    padding: 12px 14px;
+    border-radius: 14px;
+    width: 100%;
+  }
+
+  .arcade-canvas,
+  .game-canvas-wrap {
+    height: 310px;
+    border-radius: 18px;
+    width: 100%;
+  }
+
+  .hud-row {
+    gap: 6px;
+    width: 100%;
+  }
+
+  .hud-stat-group {
+    gap: 4px;
+  }
+
+  .hud-pill {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+
+  .hud-btn {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+
+  .primary-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 11px 20px;
+    font-size: 13.5px;
+  }
+
+  /* Modal Mobile */
+  .modal-backdrop {
+    padding: 12px;
+  }
+
+  .modal-sheet,
+  .modal-card {
+    padding: 18px 16px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: calc(100vw - 24px);
+  }
+
+  .modal-title,
+  .modal-header h3 {
+    font-size: 16px;
+  }
+
+  .modal-body,
+  .modal-content {
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+
+  .modal-btn {
+    width: 100%;
+    justify-content: center;
+    height: 38px;
+    font-size: 13px;
+  }
+
+  footer.app-footer {
+    padding: 18px 12px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand-meta {
+    display: none;
+  }
 }
