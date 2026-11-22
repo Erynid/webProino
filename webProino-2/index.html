@@ -18,40 +18,34 @@
   <header class="app-header">
     <div class="header-container">
       <div class="brand-section">
-        <div class="brand-mark">
-          <i data-lucide="gauge" style="width: 16px; height: 16px;"></i>
+        <div class="brand-mark" onclick="pokeMascot()" style="cursor: pointer;" title="Klik Si Cero!">
+          <span style="font-size: 20px;">☁️</span>
         </div>
         <div class="brand-titles">
           <span class="brand-title">Sahabat Udara Bersih</span>
-          <span class="brand-meta mono">Stasiun Sensor ESP32</span>
+          <span class="brand-meta mono">Pahlawan Cilik Udara Segar 🎒</span>
         </div>
       </div>
 
-      <!-- Navigasi Menu Tab -->
+      <!-- Navigasi Menu Tab (Ramah Anak) -->
       <nav class="app-nav" id="appNav">
         <button class="nav-link active" onclick="switchTab('monitoring', event)">
-          <i data-lucide="activity" style="width: 14px; height: 14px;"></i>
-          <span>Monitoring</span>
+          <span>🌤️ Pantau Udara</span>
         </button>
         <button class="nav-link" onclick="switchTab('standar', event)">
-          <i data-lucide="shield-check" style="width: 14px; height: 14px;"></i>
-          <span>Standar CO₂ &amp; CO</span>
+          <span>🌿 Buku Standar</span>
         </button>
         <button class="nav-link" onclick="switchTab('kenali', event)">
-          <i data-lucide="cloud" style="width: 14px; height: 14px;"></i>
-          <span>Kenali Asap</span>
+          <span>☁️ Kenali Asap</span>
         </button>
         <button class="nav-link" onclick="switchTab('asal', event)">
-          <i data-lucide="factory" style="width: 14px; height: 14px;"></i>
-          <span>Asal Asap</span>
+          <span>🏭 Asal Asap</span>
         </button>
         <button class="nav-link" onclick="switchTab('dampak', event)">
-          <i data-lucide="heart-pulse" style="width: 14px; height: 14px;"></i>
-          <span>Efek Tubuh</span>
+          <span>🩺 Efek Tubuh</span>
         </button>
         <button class="nav-link" onclick="switchTab('game', event)">
-          <i data-lucide="gamepad-2" style="width: 14px; height: 14px;"></i>
-          <span>Simulasi Interaktif</span>
+          <span>🎮 Game Seru</span>
         </button>
       </nav>
 
@@ -59,17 +53,15 @@
       <div class="header-actions">
         <div class="theme-switch" role="radiogroup" aria-label="Pilihan Tema Tampilan">
           <button class="theme-btn active" id="btnThemeLight" onclick="setAppTheme('light')" aria-label="Tema Terang">
-            <i data-lucide="sun" style="width: 13px; height: 13px;"></i>
-            <span>Terang</span>
+            <span>☀️ Terang</span>
           </button>
           <button class="theme-btn" id="btnThemeDark" onclick="setAppTheme('dark')" aria-label="Tema Gelap">
-            <i data-lucide="moon" style="width: 13px; height: 13px;"></i>
-            <span>Gelap</span>
+            <span>🌙 Malam</span>
           </button>
         </div>
 
         <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Buka Menu">
-          <i data-lucide="menu" style="width: 16px; height: 16px;"></i>
+          <i data-lucide="menu" style="width: 18px; height: 18px;"></i>
         </button>
       </div>
     </div>
@@ -83,17 +75,37 @@
       <div class="content-card">
         <div class="card-top">
           <div class="card-top-info">
-            <h2>Pemantauan Udara Lingkungan</h2>
-            <p>Data telemetri langsung dari sensor perangkat keras stasiun sekolah</p>
+            <h2>🌤️ Pemantauan Udara Kelas &amp; Sekolah</h2>
+            <p>Yuk lihat kualitas udara ruangan belajar kita bersama Si Cero! 🌱🎒</p>
           </div>
           <!-- Signature Detail: Calibration Tag -->
           <div class="station-stamp mono">
             <span class="station-pulse-dot" id="stationDot"></span>
-            <span>ESP32 · STN-01 · LIVE</span>
+            <span>Stasiun Cilik ESP32 · LIVE 📡</span>
           </div>
         </div>
 
         <div class="instrument-stage">
+          <!-- Maskot Ramah Anak: Si Cero (Si Awan Cilik Sahabat Udara) -->
+          <div class="mascot-card mascot-good" id="mascotCard">
+            <div class="mascot-avatar-wrap">
+              <div class="mascot-avatar" id="mascotAvatar" onclick="pokeMascot()" title="Klik Si Cero untuk menyapa!">☁️😄✨</div>
+              <span class="mascot-badge" id="mascotBadge" onclick="pokeMascot()">Si Cero</span>
+            </div>
+            <div class="mascot-bubble">
+              <div class="mascot-bubble-header">
+                <span class="mascot-name">Si Cero berkata:</span>
+                <span class="mascot-status-tag" id="mascotStatusTag">🌟 Udara Segar Juara!</span>
+              </div>
+              <p class="mascot-speech" id="mascotSpeech">
+                "Hore! Udaranya sejuuuk dan segar sekali! Paru-paru kita sehat, belajar di kelas jadi makin fokus dan cerdas! 🎒🍃"
+              </p>
+              <div class="mascot-tip" id="mascotTip">
+                💡 <b>Tips Cero:</b> Udara bersih membuat konsentrasi belajar kita semakin hebat!
+              </div>
+            </div>
+          </div>
+
           <!-- Primary Telemetry Dial -->
           <div class="dial-container">
             <svg class="dial-svg" viewBox="0 0 190 190">
@@ -101,9 +113,9 @@
               <circle class="dial-arc" id="dialArc" cx="95" cy="95" r="85"></circle>
             </svg>
             <div class="dial-readout">
-              <span class="readout-label">Kadar CO₂</span>
+              <span class="readout-label">🍃 Napas Bersih (CO₂)</span>
               <span class="readout-value mono" id="valPM">520</span>
-              <span class="readout-unit mono">ppm</span>
+              <span class="readout-unit mono">ppm (Partikel)</span>
             </div>
           </div>
 
@@ -111,8 +123,8 @@
           <div class="status-strip" id="statusStrip">
             <div class="status-dot" id="statusDot"></div>
             <div class="status-text-block">
-              <h3 id="statusTitle">Kualitas Udara Sangat Baik &amp; Segar</h3>
-              <p id="statusDesc">Konsentrasi CO₂ 520 ppm &amp; CO 1.2 ppm dalam rentang aman. Sirkulasi udara berfungsi optimal.</p>
+              <h3 id="statusTitle">Kualitas Udara Sangat Baik &amp; Segar 🌟</h3>
+              <p id="statusDesc">Konsentrasi CO₂ 520 ppm &amp; CO 1.2 ppm dalam rentang aman. Sirkulasi udara berfungsi optimal!</p>
             </div>
           </div>
 
@@ -120,61 +132,61 @@
           <div class="telemetry-grid">
             <div class="telemetry-card" onclick="openDetailModal('standar_co2')" style="cursor: pointer;" title="Klik untuk panduan standar CO₂">
               <div class="telemetry-head">
-                <span class="telemetry-name">Kadar CO₂ (Karbon Dioksida)</span>
+                <span class="telemetry-name">🍃 Kadar CO₂ (Napas Ruangan)</span>
                 <span class="telemetry-chip mono good" id="chipCO2">Sangat Baik</span>
               </div>
               <div class="telemetry-val mono" id="valPMTile">520 ppm</div>
-              <div class="telemetry-sub mono">Rentang normal: 400 – 1.000 ppm</div>
+              <div class="telemetry-sub mono">Rentang Segar Belajar: 400 – 1.000 ppm</div>
             </div>
 
             <div class="telemetry-card" onclick="openDetailModal('standar_co')" style="cursor: pointer;" title="Klik untuk panduan standar CO">
               <div class="telemetry-head">
-                <span class="telemetry-name">Karbon Monoksida (CO)</span>
+                <span class="telemetry-name">🚗 Gas Knalpot (Karbon Monoksida)</span>
                 <span class="telemetry-chip mono good" id="chipCO">Aman</span>
               </div>
               <div class="telemetry-val mono" id="valCO">1.2 ppm</div>
-              <div class="telemetry-sub mono">Ambang batas aman: 0 – 9 ppm</div>
+              <div class="telemetry-sub mono">Batas Aman Tubuh: 0 – 9 ppm</div>
             </div>
 
             <div class="telemetry-card">
               <div class="telemetry-head">
-                <span class="telemetry-name">Suhu Ruangan</span>
-                <span class="telemetry-chip mono">DHT11</span>
+                <span class="telemetry-name">🌡️ Suhu Ruangan Kelas</span>
+                <span class="telemetry-chip mono">Sensor DHT11</span>
               </div>
               <div class="telemetry-val mono" id="valTemp">29.0°C</div>
-              <div class="telemetry-sub mono">Suhu operasional kelas wajar</div>
+              <div class="telemetry-sub mono">Suhu Nyaman untuk Belajar</div>
             </div>
           </div>
 
           <!-- Banner Panduan Baku Mutu -->
           <div class="standard-banner" onclick="switchTab('standar', event)">
             <div class="standard-banner-icon">
-              <i data-lucide="book-open" style="width: 15px; height: 15px;"></i>
+              <i data-lucide="book-open" style="width: 16px; height: 16px;"></i>
             </div>
             <div class="standard-banner-text">
-              <b>Standar Ruangan Terakreditasi:</b> CO₂ normal berkisar <b>400–1.000 ppm</b> &amp; CO aman <b>0–9 ppm</b>. Periksa tabel lengkap untuk deteksi risiko.
+              <b>Buku Standar Udara Sehat:</b> CO₂ segar <b>400–1.000 ppm</b> &amp; CO aman <b>0–9 ppm</b>. Yuk klik untuk baca panduan bergambar lengkap!
             </div>
             <span class="standard-banner-link">
-              <span>Buka Panduan</span>
-              <i data-lucide="arrow-right" style="width: 13px; height: 13px;"></i>
+              <span>Buka Buku</span>
+              <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
             </span>
           </div>
 
           <!-- Simulation Bar -->
           <div class="simulation-bar">
-            <span class="simulation-caption">Simulasi respons indikator standar CO₂ &amp; CO</span>
+            <span class="simulation-caption">🎮 Tombol Uji Coba Simulasi Sensor (Yuk Coba Klik!)</span>
             <div class="simulation-group">
               <button class="simulation-btn active" onclick="setSensorLevel('good', event)">
-                <i data-lucide="check" style="width: 13px; height: 13px;"></i>
-                <span>Normal (400-1000)</span>
+                <i data-lucide="check" style="width: 14px; height: 14px;"></i>
+                <span>🟢 Udara Segar (400-800)</span>
               </button>
               <button class="simulation-btn" onclick="setSensorLevel('mid', event)">
-                <i data-lucide="alert-triangle" style="width: 13px; height: 13px;"></i>
-                <span>Sedang (&gt;1000 / &gt;9)</span>
+                <i data-lucide="alert-triangle" style="width: 14px; height: 14px;"></i>
+                <span>🟡 Ruang Pengap (1000-2000)</span>
               </button>
               <button class="simulation-btn" onclick="setSensorLevel('bad', event)">
-                <i data-lucide="alert-octagon" style="width: 13px; height: 13px;"></i>
-                <span>Buruk (&gt;2000 / &gt;35)</span>
+                <i data-lucide="alert-octagon" style="width: 14px; height: 14px;"></i>
+                <span>🔴 Asap Bahaya (&gt;2000)</span>
               </button>
             </div>
           </div>
@@ -189,8 +201,8 @@
       <div class="content-card">
         <div class="card-top">
           <div class="card-top-info">
-            <h2>🌿 Panduan Standar Kualitas Udara Ruangan (CO₂ &amp; CO)</h2>
-            <p>Baku mutu konsentrasi gas Karbon Dioksida dan Karbon Monoksida untuk ruang kelas dan ruang kerja sehat</p>
+            <h2>🌿 Buku Pintar Standar Kualitas Udara (CO₂ &amp; CO)</h2>
+            <p>Panduan seru mengetahui batas udara sehat agar kita tetap bugar dan cerdas di sekolah! 🏫🎒</p>
           </div>
         </div>
 
@@ -203,7 +215,7 @@
               </div>
               <div class="standard-header-info">
                 <h3>1. Karbon Dioksida (CO₂)</h3>
-                <p>Parameter sirkulasi udara dan pertukaran oksigen dalam ruangan</p>
+                <p>Gas dari napas kita dan sirkulasi udara bersih di dalam ruangan</p>
               </div>
             </div>
 
@@ -214,31 +226,31 @@
             <div class="standard-tiers">
               <div class="standard-tier-row">
                 <span class="standard-range">400 – 800 ppm</span>
-                <span class="standard-tag good">Sangat Baik</span>
+                <span class="standard-tag good">🌟 Juara Segar</span>
                 <span class="standard-desc">Kualitas udara sangat baik dan segar (ventilasi/sirkulasi udara berfungsi optimal).</span>
               </div>
 
               <div class="standard-tier-row">
                 <span class="standard-range">801 – 1.000 ppm</span>
-                <span class="standard-tag good">Batas Normal</span>
+                <span class="standard-tag good">👍 Normal Sehat</span>
                 <span class="standard-desc">Batas normal, mulai ada penumpukan CO₂ ringan dari aktivitas atau napas penghuni.</span>
               </div>
 
               <div class="standard-tier-row">
                 <span class="standard-range">1.001 – 2.000 ppm</span>
-                <span class="standard-tag mid">Mulai Buruk</span>
+                <span class="standard-tag mid">🥱 Bikin Ngantuk</span>
                 <span class="standard-desc">Kualitas udara mulai buruk, dapat menyebabkan rasa kantuk, kurang fokus, dan konsentrasi menurun.</span>
               </div>
 
               <div class="standard-tier-row">
                 <span class="standard-range">2.001 – 5.000 ppm</span>
-                <span class="standard-tag bad">Kualitas Buruk</span>
+                <span class="standard-tag bad">🤕 Pusing &amp; Lesu</span>
                 <span class="standard-desc">Kualitas udara buruk, berpotensi memicu sakit kepala, pusing, dan gejala Sick Building Syndrome.</span>
               </div>
 
               <div class="standard-tier-row">
                 <span class="standard-range">Di atas 5.000 ppm</span>
-                <span class="standard-tag danger">Kondisi Berbahaya</span>
+                <span class="standard-tag danger">🚨 Bahaya Merah!</span>
                 <span class="standard-desc">Kondisi berbahaya, memerlukan tindakan ventilasi atau pengosongan ruangan segera.</span>
               </div>
             </div>
@@ -248,11 +260,11 @@
           <div class="standard-card">
             <div class="standard-header">
               <div class="standard-header-icon co">
-                <span>⚠️</span>
+                <span>🚗</span>
               </div>
               <div class="standard-header-info">
                 <h3>2. Karbon Monoksida (CO)</h3>
-                <p>Gas beracun tanpa bau akibat pembakaran tak sempurna dan asap kendaraan</p>
+                <p>Gas beracun tak berbau dari asap knalpot kendaraan dan pembakaran sampah</p>
               </div>
             </div>
 
@@ -263,31 +275,31 @@
             <div class="standard-tiers">
               <div class="standard-tier-row">
                 <span class="standard-range">0 – 9 ppm</span>
-                <span class="standard-tag good">Sangat Baik &amp; Aman</span>
+                <span class="standard-tag good">🌟 Super Aman!</span>
                 <span class="standard-desc">Kualitas udara sangat baik dan aman (kadar CO normal lingkungan).</span>
               </div>
 
               <div class="standard-tier-row">
                 <span class="standard-range">10 – 35 ppm</span>
-                <span class="standard-tag mid">Batas Sedang</span>
+                <span class="standard-tag mid">⚠️ Awas Batuk</span>
                 <span class="standard-desc">Batas paparan sedang, berisiko bagi individu sensitif (anak-anak, lansia, penderita asma) jika terpapar lama.</span>
               </div>
 
               <div class="standard-tier-row">
                 <span class="standard-range">36 – 100 ppm</span>
-                <span class="standard-tag bad">Kualitas Buruk</span>
+                <span class="standard-tag bad">🤢 Pusing &amp; Mual</span>
                 <span class="standard-desc">Kualitas udara buruk, dapat memicu sakit kepala ringan, pusing, mual, dan lelah (setelah paparan 1–2 jam).</span>
               </div>
 
               <div class="standard-tier-row">
                 <span class="standard-range">101 – 400 ppm</span>
-                <span class="standard-tag danger">Sangat Berbahaya</span>
+                <span class="standard-tag danger">🚨 Sangat Bahaya</span>
                 <span class="standard-desc">Kualitas udara sangat berbahaya, memicu sakit kepala berat, pusing parah, dan bingung (paparan &gt;30 menit).</span>
               </div>
 
               <div class="standard-tier-row">
                 <span class="standard-range">Di atas 400 ppm</span>
-                <span class="standard-tag danger" style="background-color: #991b1b;">Darurat &amp; Fatal</span>
+                <span class="standard-tag danger" style="background-color: #991b1b;">☠️ Darurat Fatal</span>
                 <span class="standard-desc">Kondisi darurat dan fatal, berisiko tinggi menyebabkan kehilangan kesadaran hingga ancaman jiwa.</span>
               </div>
             </div>
@@ -500,7 +512,7 @@
           <div class="arcade-icon">
             <i data-lucide="compass" style="width: 24px; height: 24px;"></i>
           </div>
-          <h2>Misi Udara Bersih</h2>
+          <h2>🎮 Petualangan Pahlawan Udara Bersih</h2>
           <p class="arcade-desc">
             Kumpulkan skor setinggi-tingginya dalam 45 detik! Jaga combo streak, manfaatkan filter kilat, dan hindari partikel polutan berbahaya.
           </p>
@@ -547,7 +559,7 @@
           <div style="display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap;">
             <button class="primary-btn" onclick="startSimulation()">
               <i data-lucide="play" style="width: 15px; height: 15px;"></i>
-              <span>Mulai Misi (45 Detik)</span>
+              <span>🚀 Mulai Petualangan (45 Detik)!</span>
             </button>
             <button class="primary-btn" style="background-color: var(--surface-raised); color: var(--text-secondary); border: 1px solid var(--border-hairline);" onclick="exitGameToMonitoring()">
               <i data-lucide="arrow-left" style="width: 14px; height: 14px;"></i>
@@ -910,8 +922,70 @@
     }
 
     // 4. Status Level & Simulation Controller (Sesuai Standar CO2 & CO)
+    
+    // --- FITUR RAMAH ANAK: Maskot Si Cero ---
+    function updateMascotMood(level, customTip) {
+      const mascot = document.getElementById("mascotCard");
+      const avatar = document.getElementById("mascotAvatar");
+      const tag = document.getElementById("mascotStatusTag");
+      const speech = document.getElementById("mascotSpeech");
+      const tip = document.getElementById("mascotTip");
+      if (!mascot || !avatar || !tag || !speech) return;
+
+      mascot.classList.remove("mascot-good", "mascot-mid", "mascot-bad");
+
+      if (level === "good") {
+        mascot.classList.add("mascot-good");
+        avatar.textContent = "☁️😄✨";
+        tag.textContent = "🌟 Udara Segar Juara!";
+        speech.textContent = '"Hore! Udaranya sejuuuk dan segar sekali! Paru-paru kita sehat, belajar di kelas jadi makin fokus dan cerdas! 🎒🍃"';
+        if (tip) tip.innerHTML = customTip || "💡 <b>Tips Cero:</b> Udara bersih membuat konsentrasi belajar kita semakin hebat!";
+      } else if (level === "mid") {
+        mascot.classList.add("mascot-mid");
+        avatar.textContent = "☁️🥱💤";
+        tag.textContent = "🥱 Mulai Pengap & Ngantuk!";
+        speech.textContent = '"Hooaam... Ruangan mulai pengap nih! Konsentrasi belajar bisa berkurang dan mata jadi berat. Yuk buka jendela kelas! 🪟"';
+        if (tip) tip.innerHTML = customTip || "🪟 <b>Tips Cero:</b> Ayo buka jendela atau pintu kelas sekarang agar oksigen baru masuk!";
+      } else {
+        mascot.classList.add("mascot-bad");
+        avatar.textContent = "☁️😵‍💫😷";
+        tag.textContent = "🚨 Bahaya Asap & Pengap!";
+        speech.textContent = '"Uhuk-uhuk! Awas, ada asap atau gas kotor berlebih! Paru-paru kita bisa sakit jika menghirupnya terlalu lama! 🏃💨"';
+        if (tip) tip.innerHTML = customTip || "😷 <b>Tips Cero:</b> Segera laporkan ke Bapak/Ibu Guru, buka semua jendela, atau pakai masker ya!";
+      }
+    }
+
+    function pokeMascot() {
+      const avatar = document.getElementById("mascotAvatar");
+      if (!avatar) return;
+      avatar.style.transform = "scale(1.3) rotate(15deg)";
+      setTimeout(() => {
+        avatar.style.transform = "";
+      }, 250);
+      
+      try {
+        const ctx = getAudioCtx();
+        if (ctx) {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15);
+          gain.gain.setValueAtTime(0.08, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.25);
+        }
+      } catch (e) {}
+
+      showDiscreetToast("Si Cero senang menyapamu! ☁️✨ Tetap jaga udara bersih ya!");
+    }
+
     function setSensorLevel(level, event) {
       currentSensorLevel = level;
+      updateMascotMood(level);
       const strip = document.getElementById("statusStrip");
       const dot = document.getElementById("statusDot");
       const title = document.getElementById("statusTitle");
@@ -1060,6 +1134,7 @@
         overall = "mid";
       }
 
+      updateMascotMood(overall);
       if (overall === "good") {
         strip.style.backgroundColor = "var(--status-good-bg)";
         strip.style.borderColor = "var(--status-good-border)";
@@ -1465,6 +1540,7 @@
 
       updateHUD();
       updateHighScoreDisplays();
+    updateMascotMood("good");
       setScreen("screen-gameplay");
 
       const board = document.getElementById("arcade-board");
